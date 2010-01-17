@@ -1,0 +1,37 @@
+[% META title = "ACCOUNT" %]
+<p>
+<table class="detail">
+	<tr>
+		<td><img src="[% item.img %]"/>
+		</td>
+	</tr>
+	<tr align=left>
+		<th>Title:</td>
+		<td>[% item.title %]</td>
+	</tr>
+	<tr align=left>
+		<th>Year:</td>
+		<td>[% item.year %]</td>
+	</tr>
+	<tr align=left>
+		<th>Genre:</td>
+		<td>
+			[% FOR row = item.genres %]
+				[% row.name %] 
+			[% END %]
+		</td>
+	</tr>
+	<tr align=left>
+		<th width='150px'>Release Date:</td>
+		<td>[% item.release_date %]</td>
+	</tr>
+	<tr align=left>
+		<th valign=top>Plot:</td>
+		<td>[% item.plot %]</td>
+	</tr>
+	<tr align=left>
+		<th>Creator:</td>
+		<td>[% item.uid %]</td>
+	</tr>
+</table>
+</p>

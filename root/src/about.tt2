@@ -1,0 +1,37 @@
+[% META title = 'ABOUT' %]
+<div id="about">
+<b>History</b>
+<p>
+Version 1.11 released - 01/15/2010<br>
+Version 1.10 released - 01/12/2010<br>
+Version 1.05 released - 01/11/2010<br>
+Version 1.02 released - 01/05/2010<br>
+Version 1.00 released - 01/04/2010<br>
+</p>
+<b>Source Code</b>
+<p></p>
+<b>Modules</b>
+<p>
+Catalyst<br>
+Catalyst::Plugin::ConfigLoader<br>
+Catalyst::Plugin::Static::Simple<br>
+Catalyst::Action::RenderView<br>
+Catalyst::Plugin::StackTrace<br>
+Catalyst::Plugin::Authentication<br>
+Catalyst::Plugin::Authorization::Roles<br>
+Catalyst::Plugin::Session<br>
+Catalyst::Plugin::Session::Store::FastMmap<br>
+Catalyst::Plugin::Session::State::Cookie<br>
+Catalyst::Authentication::Store::DBIx::Class<br>
+Catalyst::Model::DBIC::Schema<br>
+DBIx::Class<br>
+DBIx::Class::Schema<br>
+Catalyst::View::TT<br>
+Catalyst::Controller::FormBuilder<br>
+Catalyst::Controller<br>
+DBD::SQLite<br>
+YAML::XS<br>
+YAML<br>
+</p>
+
+</div>

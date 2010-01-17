@@ -1,0 +1,20 @@
+[% META title = "JandC.CO.CC" %]
+<div id="about">
+<p><b>What is</b>
+</p>
+<p>
+Welcome to JandC.CO.CC. This website is designed to demo how to use Catalyst framework to build a dynamic web application effectively and efficiently. All the data here is for testing and demo only.
+Please feel free to start from anywhere and take a shot.</p> 
+<p><b>Latest Movies</b>
+</p>
+<ul>
+[% WHILE (item = items.next) %]
+	<li>
+		<a href="[% Catalyst.uri_for('/item/detail/') _ item.id %]">[% item.title %]</a>		
+		[% item.release_date %]	
+	</li>
+[% END %]
+</ul>
+<p><b>Latest News</b>
+</p>
+</div>

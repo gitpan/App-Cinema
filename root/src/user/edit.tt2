@@ -1,0 +1,2 @@
+[% META title = "Edit an Account" %]
+[% FormBuilder.render %]

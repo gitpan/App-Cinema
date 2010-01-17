@@ -1,0 +1,31 @@
+<!-- BEGIN site/menu -->
+  <ul>
+    <!--<li class="current_page_item"><a href="/">Home</a></li>-->
+    <li><a HREF="[% Catalyst.uri_for('/menu') %]">Home</a></li>
+    [% IF !Catalyst.user_exists %]
+    <li><a HREF="[% Catalyst.uri_for('/user/add') %]">Register</a></li>
+    [% END %]
+    [% IF Catalyst.check_user_roles('admin') %]
+    <li><a HREF="[% Catalyst.uri_for('/item/add') %]">Admin</a></li>
+    [% END %]
+    <li><a HREF="[% Catalyst.uri_for('/user/view') %]">Account</a></li>
+    <!--<li><a href="[% Catalyst.uri_for('/user/add') %]">Create Account</a></li>-->
+
+    <li><a HREF="[% Catalyst.uri_for('/user/history') %]">Event</a></li>
+    <li><a HREF="[% Catalyst.uri_for('/news') %]">news</a></li>
+    <li><a href="[% Catalyst.uri_for('/about') %]">About</a></li>
+    <li><span>
+		    <form action="[% Catalyst.uri_for('/item/search_do') %]" method="POST">
+				<select id="sel" name="sel">
+					<option value="">All</option>
+					[% WHILE (genre = genres.next) %]
+					<option value="[% genre.id %]">[% genre.name %]</option>
+					[% END %]
+				</select>
+				<input type="text" name="txt">
+				<input type="submit" value="Search"/>
+			</form>
+		</span>
+	</li> 
+  </ul>
+<!-- END site/menu -->

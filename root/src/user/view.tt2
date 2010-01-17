@@ -1,0 +1,44 @@
+[% META title = "ACCOUNT" %]
+<p>
+<table >
+	<tr align="left">
+		<th>FIRST NAME</th> <th>LAST NAME</th><th>ROLE</th><th>EMAIL</th> <th>UID</th> <th>PWD</th>
+		<th>STATUS</th>
+		[% IF Catalyst.check_user_roles('admin') %]	
+		<th></th><th></th><th></th>
+		[% END %]
+		</tr>
+	[% WHILE (user = users.next) %]
+	<tr>
+		<td>[% user.first_name%]</td>
+		<td>[% user.last_name%]</td>
+		<td>
+		[% FOR row = user.roles %]
+			[% row.role %]
+		[% END %]
+		</td>
+		<td>[% user.email_address%]</td>
+		<td>[% user.username%]</td>
+		<td>[% user.password%]</td>
+		<td>
+		[% IF user.active %]
+			Active
+		[% ELSE %]
+			Not Active
+		[% END %]
+		</td>
+		<td><a href="[% Catalyst.uri_for('/user/edit/') _ user.username %]">Edit</a></td>
+		[% IF Catalyst.check_user_roles('admin') %]
+			<td>
+			[% IF !user.active %]
+				<a href="[% Catalyst.uri_for('/user/active/1/') _ user.username %]">Activate</a>
+			[% ELSE %]
+				<a href="[% Catalyst.uri_for('/user/active/0/') _ user.username %]">Inactivate</a>
+			[% END %]
+			</td>
+			<td><a href="[% Catalyst.uri_for('delete_do/') _ user.username %]">Delete</a></td>
+		[% END %]
+	</tr>
+	[% END %]
+</table>
+</p>

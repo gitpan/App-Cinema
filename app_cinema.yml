@@ -1,0 +1,19 @@
+name: App::Cinema
+Plugin::Authentication:
+   default_realm: members
+   realms:
+      members:
+         credential:
+            class: Password
+            password_field: password
+            password_type: clear
+         store:
+            class: DBIx::Class
+            user_class: MD::Users
+            role_relation: roles
+            role_field: role
+            role_class: MD::Roles
+Model::MD:
+   schema_class: App::Cinema::Schema
+   connect_info:
+      - DBI:SQLite:__HOME__/myapp.db

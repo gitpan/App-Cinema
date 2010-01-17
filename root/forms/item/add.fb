@@ -1,0 +1,29 @@
+# Form config file root/forms/books/edit.fb
+name: item_add
+method: post
+fields:
+    title:
+        label: Title
+        type:  text
+        size:  40
+        required: 1
+    year:
+        label: Year
+        type:  text
+        size:  40
+    img:
+        label: Image (URL)
+        type:  text
+        size:  40
+    genre:
+        label: Genre
+        type:  select
+        required: 1
+        multiple: 1
+    plot:
+        label: Description
+        type:  textarea
+        cols:  80
+        rows:  5    
+    	
+submit: Save New Movie
