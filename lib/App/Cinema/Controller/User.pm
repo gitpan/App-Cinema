@@ -1,12 +1,8 @@
-###########################
-# Author : Jeff Mo
-# Date : 01/04/2009
-# Version : 1.0
-###########################
 package App::Cinema::Controller::User;
 
 use strict;
 use warnings;
+use HTTP::Date;
 use base qw(Catalyst::Controller::FormBuilder);
 
 sub history : Local {
@@ -18,14 +14,12 @@ sub history : Local {
 	}
 	my $rs;
 	if ( $c->check_user_roles(qw/admin/) ) {
-		$rs =
-		  $c->model('MD::Event')
+		$rs = $c->model('MD::Event')
 		  ->search( undef, { rows => 10, order_by => { -desc => 'e_time' } } );
 	}
 	else {
 		$rs =
-		  $c->model('MD::Event')
-		  ->search( { uid => $c->user->obj->username() },
+		  $c->model('MD::Event')->search( { uid => $c->user->obj->username() },
 			{ rows => 10, order_by => { -desc => 'e_time' } } );
 	}
 
@@ -43,8 +37,7 @@ sub add : Local Form {
 	$form->field(
 		name     => 'role',
 		required => 1,
-		options =>
-		  [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
+		options  => [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
 	);
 	if ( $form->submitted && $form->validate ) {
 		my $row = $c->model('MD::User')->create(
@@ -66,8 +59,8 @@ sub add : Local Form {
 				e_time => HTTP::Date::time2iso(time)
 			}
 		);
-		$c->flash->{message} = 'Added '. $row->first_name;
-		$c->response->redirect( $c->uri_for('/login') );
+		$c->flash->{message} = 'Added ' . $row->first_name;
+		$c->res->redirect( $c->uri_for('/login') );
 	}
 }
 

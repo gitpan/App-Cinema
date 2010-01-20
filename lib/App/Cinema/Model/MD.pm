@@ -3,16 +3,6 @@ package App::Cinema::Model::MD;
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
-__PACKAGE__->config(
-    schema_class => 'App::Cinema::Schema',
-    
-    connect_info => {
-        dsn => 'dbi:SQLite:myapp.db',
-        user => '',
-        password => '',
-    }
-);
-
 =head1 NAME
 
 App::Cinema::Model::MD - Catalyst DBIC Schema Model

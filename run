@@ -1,1 +1,1 @@
-perl script/myapp_server.pl -r -d
+perl script/app_cinema_server.pl -r -d

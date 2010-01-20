@@ -1,8 +1,3 @@
-###########################
-# Author : Jeff Mo
-# Date : 01/04/2009
-# Version : 1.0
-###########################
 package App::Cinema::Controller::Item;
 
 use strict;
@@ -14,9 +9,8 @@ sub add : Local Form {
 	my $form = $self->formbuilder;
 
 	$form->field(
-		name => 'genre',
-		options =>
-		  [ map { [ $_->id, $_->name ] } $c->model('MD::Genre')->all ]
+		name    => 'genre',
+		options => [ map { [ $_->id, $_->name ] } $c->model('MD::Genre')->all ]
 	);
 
 	if ( $form->submitted && $form->validate ) {
@@ -64,13 +58,14 @@ sub search_do : Local {
 #display only; reused by checkout and delete action
 sub search : Local {
 	my ( $self, $c ) = @_;
-	my $genre = $c->session->{genre};
+	my $genre  = $c->session->{genre};
 	my @fields = qw/title/;
 	my @tokens = $c->session->{'query'};
 	@fields = cross( \@fields, \@tokens );
-
-	my $rs = $c->model('MD::Item')
-	     ->search( \@fields, { rows => 10,, order_by => { -desc => 'release_date' } } );
+	my $rs =
+	  $c->model('MD::Item')
+	  ->search( \@fields,
+		{ rows => 10,, order_by => { -desc => 'release_date' } } );
 
 	#	my $result;
 	#	if ($genre) {

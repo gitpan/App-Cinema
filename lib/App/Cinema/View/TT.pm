@@ -1,8 +1,3 @@
-###########################
-# Author : Jeff Mo
-# Date : 01/04/2009
-# Version : 1.0
-###########################
 package App::Cinema::View::TT;
 
 use strict;
