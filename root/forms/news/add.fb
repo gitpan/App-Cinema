@@ -1,0 +1,13 @@
+name: news_add
+method: POST
+fields:
+    name:
+        label: Title
+        type:  text
+        size:  40
+    desc:
+        label: Desc
+        type:  textarea
+        cols:  80
+        rows:  5
+submit: Save	

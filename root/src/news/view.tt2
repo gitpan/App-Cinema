@@ -1,0 +1,15 @@
+[% META title = "VIEW NEWS" %]
+<p>
+<table >
+	<tr align="left">
+		<th>TITLE</th> <th>RELEASE DATE</th>
+	</tr>
+	[% WHILE (new = news.next) %]
+	<tr>
+		<td><a href="[% Catalyst.uri_for('/news/detail/') _ new.id %]"
+			   title="[% new.desc %]">[% new.title %]</a></td>
+		<td>[% new.release_date%]</td>
+	</tr>
+	[% END %]
+</table>
+</p>

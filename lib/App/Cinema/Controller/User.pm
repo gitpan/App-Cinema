@@ -14,7 +14,8 @@ sub history : Local {
 	}
 	my $rs;
 	if ( $c->check_user_roles(qw/admin/) ) {
-		$rs = $c->model('MD::Event')
+		$rs =
+		  $c->model('MD::Event')
 		  ->search( undef, { rows => 10, order_by => { -desc => 'e_time' } } );
 	}
 	else {
@@ -167,4 +168,68 @@ sub delete_do : Local {
 	$c->res->redirect( $c->uri_for('/user/view') );
 }
 
+#sub test : Local {
+#	my ( $self, $c, $arg1, $arg2 ) = @_;
+#	my $result = $c->model('MD::Event')->create(
+#		{
+#			uid    => $c->user->obj->username(),
+#			desc   => $arg1,
+#			target => $arg2,
+#			e_time => HTTP::Date::time2iso(time)
+#		}
+#	);
+#}
+
 1;
+
+=head1 NAME
+
+App::Cinema::Controller::User - A controller that handles a user's actions.
+
+=head1 SYNOPSIS
+
+You can call its actions in any template files either
+
+    <a HREF="[% Catalyst.uri_for('/user/add') %]">Admin</a>
+    
+or
+
+    <a HREF="[% base %]user/add">Admin</a>
+
+You can also use them in any other controller modules like this:
+
+    $c->res->redirect( $c->uri_for('/user/edit') );
+		
+=head1 DESCRIPTION
+
+This is a controller that will handle every action of a user.
+
+=head2 Methods
+
+=over 12
+
+=item C<add>
+
+This action is used to add a user.
+
+=item C<delete_do>
+
+This action is used to delete a user.
+
+=item C<edit>
+
+This action is used to modify a user.
+
+=item C<history>
+
+This action is used to display what does a user do during its session.
+
+=item C<view>
+
+This action is used to display all users in this system. 
+
+=back
+
+=head1 AUTHOR
+
+Jeff Mo - L<http://jandc.co.cc/>

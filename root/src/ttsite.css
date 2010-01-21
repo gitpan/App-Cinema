@@ -6,7 +6,8 @@ html {
 body { 
     background-color: [% site.col.page %];
     color: [% site.col.text %];
-    font-family : Arial, Verdana , sans-serif;
+    /*font-family : Arial, Verdana , sans-serif;*/
+    font-family: "DejaVu Serif", "Bitstream Vera Serif", sans-serif;
     /*font-size: 12pt;*/
     margin: 0px;
     padding: 0px;
@@ -22,8 +23,6 @@ a {
 a:hover {
       text-decoration: underline;
 }
-
-
 
 #header {
     background-color: [% site.col.head %];

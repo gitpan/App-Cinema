@@ -9,28 +9,15 @@ Version 1.05 released - 01/11/2010<br>
 Version 1.02 released - 01/05/2010<br>
 Version 1.00 released - 01/04/2010<br>
 </p>
-<b>Source Code</b>
-<p></p>
-<b>Modules</b>
+<b>Reference</b>
 <p>
-Catalyst<br>
-Catalyst::Plugin::Authentication<br>
-Catalyst::Plugin::Authorization::Roles<br>
-Catalyst::Plugin::Session<br>
-Catalyst::Plugin::Session::Store::FastMmap<br>
-Catalyst::Plugin::Session::State::Cookie<br>
-Catalyst::Plugin::Session::Request<br>
-Catalyst::Plugin::Session::Response<br>
-Catalyst::Log<br>
-Catalyst::Model::DBIC::Schema<br>
-DBIx::Class<br>
-DBIx::Class::Schema<br>
-Catalyst::View::TT<br>
-Catalyst::Controller::FormBuilder<br>
-Catalyst::Controller<br>
-DBD::SQLite<br>
-YAML::XS<br>
-YAML<br>
+<a href="http://search.cpan.org/~sman/">CPAN search</a><br>
+<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>
+<a href="http://perlmonks.org/index.pl?node_id=6364;user=sman">PerlMonk Q&A</a><br>
+<a href="http://students.engr.scu.edu/~cmo/index.html">My CGI project</a><br>
 </p>
-
+<b>Resume</b>
+<p>
+<a href="[% base %]static/Resume_Jeff Mo.pdf">Resume_Jeff Mo.pdf</a><br>
+</p>
 </div>

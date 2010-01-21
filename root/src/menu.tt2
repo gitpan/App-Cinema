@@ -6,6 +6,9 @@
 Welcome to JandC.CO.CC. This website is designed to demo how to use Catalyst framework to build a dynamic web application effectively and efficiently. 
 I am a big fan of movies and all the data here is for testing and demo only. Please feel free to start from anywhere and take a shot.</p> 
 <p><b>Latest Movies</b>
+[% IF Catalyst.check_user_roles('admin') %]
+ | <a href="[% Catalyst.uri_for('/item/add/') %]">Add</a>
+[% END %]
 </p>
 <ul>
 [% WHILE (item = items.next) %]
@@ -17,6 +20,19 @@ I am a big fan of movies and all the data here is for testing and demo only. Ple
 	<li><a href="[% Catalyst.uri_for('/item/search/') %]">More...</a>
 	</li>
 </ul>
-<p><b>Latest News</b>
+<p><b>Latest News</b> 
+[% IF Catalyst.check_user_roles('admin') %]
+| <a href="[% base %]news/add">Add</a>
+[% END %]
 </p>
+<ul>
+[% WHILE (new = news.next) %]
+	<li>
+		<a href="[% Catalyst.uri_for('/news/detail/') _ new.id %]">[% new.title %]</a>		
+		[% new.release_date %]	
+	</li>
+[% END %]
+	<li><a href="[% Catalyst.uri_for('/news/view/') %]">More...</a>
+	</li>
+</ul>
 </div>

@@ -12,7 +12,7 @@
     <!--<li><a href="[% Catalyst.uri_for('/user/add') %]">Create Account</a></li>-->
 
     <li><a HREF="[% Catalyst.uri_for('/user/history') %]">Event</a></li>
-    <li><a HREF="[% Catalyst.uri_for('/news') %]">news</a></li>
+    <li><a HREF="[% Catalyst.uri_for('/news/view') %]">news</a></li>
     <li><a href="[% Catalyst.uri_for('/about') %]">About</a></li>
     <li><span>
 		    <form action="[% Catalyst.uri_for('/item/search_do') %]" method="POST">

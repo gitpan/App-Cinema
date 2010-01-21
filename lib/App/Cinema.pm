@@ -15,7 +15,7 @@ use Catalyst qw/
   Session::State::Cookie
   /;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 # Start the application
 __PACKAGE__->setup;
@@ -24,4 +24,6 @@ __PACKAGE__->setup;
 
 =head1 NAME
 
-App::Cinema - Main class
+App::Cinema - My demo website of Catalyst framework
+
+=cut

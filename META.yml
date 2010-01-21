@@ -1,5 +1,5 @@
 ---
-abstract: 'Main clas'
+abstract: 'My demo website of Catalyst framework'
 author: ~
 build_requires:
   ExtUtils::MakeMaker: 6.42
@@ -38,4 +38,4 @@ requires:
   HTTP::Date: 0
   YAML: 0
   YAML::XS: 0
-version: 1.12
+version: 1.13

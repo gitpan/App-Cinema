@@ -35,8 +35,8 @@
 	</tr>
 	<tr align=left>
 		<th>Action:</td>
-		<td><a href="[% Catalyst.uri_for('checkout_do/') _ item.id _ '/' _ item.title %]">Checkout</a> | 
-		<a href="[% Catalyst.uri_for('delete_do/') _ item.id _ '/' _ item.title %]">Delete</a></td>
+		<td><a href="[% Catalyst.uri_for('checkout_do/') _ item.id _ '/' _ item.title %]">CHECKOUT</a> | 
+		<a href="[% Catalyst.uri_for('delete_do/') _ item.id _ '/' _ item.title %]">DELETE</a></td>
 	</tr>
 </table>
 </p>

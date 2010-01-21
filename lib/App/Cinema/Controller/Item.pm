@@ -135,3 +135,61 @@ sub checkout_do : Local {
 }
 
 1;
+
+=head1 NAME
+
+App::Cinema::Controller::Item - A controller that handles the 
+movie item's actions.
+
+=head1 SYNOPSIS
+
+You can call its actions in any template files either
+
+    <form action="[% Catalyst.uri_for('/item/search_do') %]" method="POST">
+    
+or
+
+    <form action="[% base %]item/search_do" method="POST">
+
+You can also use them in any other controller modules like this:
+
+    $c->res->redirect( $c->uri_for('search') );
+		
+=head1 DESCRIPTION
+
+This is a controller that will handle every action of a movie item.
+
+=head2 Methods
+
+=over 12
+
+=item C<add>
+
+This action is used to add an item.
+
+=item C<checkout_do>
+
+This action is used to checkout an item.
+
+=item C<delete_do>
+
+This action is used to delete an item.
+
+=item C<detail>
+
+This action is used to display the detail of an item.
+
+=item C<search>
+
+This action is used to display the result of item search. 
+
+=item C<search_do>
+
+This action is used to search items with or without condition.
+
+=back
+
+=head1 AUTHOR
+
+Jeff Mo - L<http://jandc.co.cc/>
+
