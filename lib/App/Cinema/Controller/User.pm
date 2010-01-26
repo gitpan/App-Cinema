@@ -1,27 +1,68 @@
 package App::Cinema::Controller::User;
+use Moose;
+use namespace::autoclean;
+BEGIN { extends qw/Catalyst::Controller::FormBuilder/ }
+use TryCatch;
+require App::Cinema::Event;
 
-use strict;
-use warnings;
-use HTTP::Date;
-use base qw(Catalyst::Controller::FormBuilder);
+sub login : Local {
+	my ( $self, $c ) = @_;
+
+	# Get the username and password from form
+	my $username = $c->req->params->{username} || "";
+	my $password = $c->req->params->{password} || "";
+
+	# If the username and password values were found in form
+	if ( $username && $password ) {
+		my $status = $c->authenticate(
+			{
+				username => $username,
+				password => $password
+			}
+		);
+		if ($status) {
+
+			# If successful, then let them use the application
+			$c->flash->{message} = "Welcome back, " . $username;
+			$c->res->redirect( $c->uri_for('/menu/home') );
+			return;
+		}
+		else {
+			$c->flash->{error} = "Bad username or password.";
+		}
+	}
+}
+
+sub logout : Local {
+	my ( $self, $c ) = @_;
+
+	# Clear the user's state
+	$c->logout;
+	$c->flash->{message} = 'Log out successfully.';
+
+	# Send the user to the starting point
+	$c->res->redirect( $c->uri_for('/menu/home') );
+}
 
 sub history : Local {
 	my ( $self, $c ) = @_;
 	if ( !$c->user_exists ) {
-		$c->stash->{error} = "You need to log in first to use this function.";
+		$c->stash->{error}    = $c->config->{need_login_errmsg};
 		$c->stash->{template} = 'result.tt2';
 		return 0;
 	}
-	my $rs;
+	my $rs;	
 	if ( $c->check_user_roles(qw/admin/) ) {
-		$rs =
-		  $c->model('MD::Event')
-		  ->search( undef, { rows => 10, order_by => { -desc => 'e_time' } } );
+		$rs = $c->model('MD::Event')->search(
+			$c->session->{query},#undef               
+			{ rows => 10, order_by => { -desc => 'e_time' } }
+		);
 	}
 	else {
-		$rs =
-		  $c->model('MD::Event')->search( { uid => $c->user->obj->username() },
-			{ rows => 10, order_by => { -desc => 'e_time' } } );
+		$rs = $c->model('MD::Event')->search(
+			{ $c->flashsession->{query}, uid => $c->user->obj->username() },
+			{ rows => 10, order_by => { -desc => 'e_time' } }
+		);
 	}
 
 	#page navigation
@@ -41,51 +82,33 @@ sub add : Local Form {
 		options  => [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
 	);
 	if ( $form->submitted && $form->validate ) {
-		my $row = $c->model('MD::User')->create(
-			{
-				first_name    => $form->field('fname'),
-				last_name     => $form->field('lname'),
-				email_address => $form->field('email'),
-				username      => $form->field('uid'),
-				password      => $form->field('pwd'),
-				active        => 1,
-				user_roles    => [ { role_id => $form->field('role') }, ],
-			}
-		);
-		my $result = $c->model('MD::Event')->create(
-			{
-				uid    => $row->username,
-				desc   => ' created account : ',
-				target => $row->username,
-				e_time => HTTP::Date::time2iso(time)
-			}
-		);
-		$c->flash->{message} = 'Added ' . $row->first_name;
-		$c->res->redirect( $c->uri_for('/login') );
-	}
-}
+		try {    #1/24
+			my $row = $c->model('MD::Users')->create(
+				{
+					first_name    => $form->field('fname'),
+					last_name     => $form->field('lname'),
+					email_address => $form->field('email'),
+					username      => $form->field('uid'),
+					password      => $form->field('pwd'),
+					active        => 1,
+					user_roles    => [ { role_id => $form->field('role') }, ],
+				}
+			);
+			my $e = App::Cinema::Event->new();
+			$e->uid( $row->username );
+			$e->desc(' created account : ');
+			$e->target( $row->username );
+			$e->insert($c);
 
-sub active : Local {
-	my ( $self, $c, $arg, $id ) = @_;
-
-	#my $form = $self->formbuilder;
-	#if ( $form->submitted && $form->validate ) {
-	my $user = $c->model('MD::User')->find( { username => $id } );
-	$user->active($arg);
-	$user->update_or_insert();
-	my $status = $arg ? ' activated ' : ' deactivated ';
-	my $result = $c->model('MD::Event')->create(
-		{
-			uid    => $c->user->obj->username(),
-			desc   => $status . '  account : ',
-			target => $id,
-			e_time => HTTP::Date::time2iso(time)
+			$c->flash->{message} = 'Added ' . $row->first_name;
+			$c->res->redirect( $c->uri_for('/login') );
 		}
-	);
-	$c->flash->{message} = 'Success!';
-	$c->response->redirect( $c->uri_for('/user/view') );
-
-	#}
+		catch( DBIx::Class::Exception $e) {
+			$c->log->debug( 'cmo:error=', $e, "\n" );
+			  $c->stash->{error} =
+'This userid is already used in the system. Please choose another one.';
+		};
+	}
 }
 
 sub edit : Local Form {
@@ -99,17 +122,12 @@ sub edit : Local Form {
 		$user->password( $form->field('pwd') );
 		$user->update_or_insert();
 
-		#write to event db
-		my $result = $c->model('MD::Event')->create(
-			{
-				uid    => $c->user->obj->username(),
-				desc   => ' edited account : ',
-				target => $id,
-				e_time => HTTP::Date::time2iso(time)
-			}
-		);
-		$c->flash->{message} = 'Edited ' . $user->first_name;
-		$c->response->redirect( $c->uri_for('/menu') );
+		my $e = App::Cinema::Event->new();
+		$e->desc(' edited account : ');
+		$e->target($id);
+		$e->insert($c);
+
+		$c->stash->{message} = 'Edited ' . $user->first_name;
 	}
 	else {
 		$form->field(
@@ -134,17 +152,18 @@ sub edit : Local Form {
 sub view : Local {
 	my ( $self, $c, $uid ) = @_;
 	if ( !$c->user_exists ) {
-		$c->stash->{error} = "You need to log in first to use this function.";
+		$c->stash->{error}    = $c->config->{need_login_errmsg};
 		$c->stash->{template} = 'result.tt2';
 		return 0;
 	}
 	if ( $c->check_user_roles(qw/admin/) ) {
-		$c->stash->{users} = $c->model('MD::Users');
+		$c->stash->{users} =
+		  $c->model('MD::Users')->search( $c->session->{query} );
 	}
 	else {
 		$c->stash->{users} =
-		  $c->model('MD::Users')
-		  ->search( { username => $c->user->obj->username() } );
+		  $c->model('MD::Users')->search( $c->session->{query},
+			{ username => $c->user->obj->username() } );
 	}
 }
 
@@ -152,14 +171,12 @@ sub delete_do : Local {
 	my ( $self, $c, $id ) = @_;
 	if ( $c->check_user_roles(qw/admin/) ) {
 		$c->model('MD::Users')->find($id)->delete();
-		my $result = $c->model('MD::Event')->create(
-			{
-				uid    => $c->user->obj->username(),
-				desc   => ' deleted account : ',
-				target => $id,
-				e_time => HTTP::Date::time2iso(time)
-			}
-		);
+
+		my $e = App::Cinema::Event->new();
+		$e->desc(' deleted account : ');
+		$e->target($id);
+		$e->insert($c);
+
 		$c->flash->{message} = "User deleted";
 	}
 	else {
@@ -167,18 +184,6 @@ sub delete_do : Local {
 	}
 	$c->res->redirect( $c->uri_for('/user/view') );
 }
-
-#sub test : Local {
-#	my ( $self, $c, $arg1, $arg2 ) = @_;
-#	my $result = $c->model('MD::Event')->create(
-#		{
-#			uid    => $c->user->obj->username(),
-#			desc   => $arg1,
-#			target => $arg2,
-#			e_time => HTTP::Date::time2iso(time)
-#		}
-#	);
-#}
 
 1;
 
@@ -232,4 +237,4 @@ This action is used to display all users in this system.
 
 =head1 AUTHOR
 
-Jeff Mo - L<http://jandc.co.cc/>
+Jeff Mo - <mo0118@gmail.com>

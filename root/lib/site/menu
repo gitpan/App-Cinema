@@ -1,26 +1,26 @@
 <!-- BEGIN site/menu -->
   <ul>
     <!--<li class="current_page_item"><a href="/">Home</a></li>-->
-    <li><a HREF="[% Catalyst.uri_for('/menu') %]">Home</a></li>
+    <li><a HREF="[% Catalyst.uri_for('/menu/home') %]">Home</a></li>
     [% IF !Catalyst.user_exists %]
     <li><a HREF="[% Catalyst.uri_for('/user/add') %]">Register</a></li>
     [% END %]
     [% IF Catalyst.check_user_roles('admin') %]
     <li><a HREF="[% Catalyst.uri_for('/item/add') %]">Admin</a></li>
     [% END %]
-    <li><a HREF="[% Catalyst.uri_for('/user/view') %]">Account</a></li>
+    <li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=user">Account</a></li>
     <!--<li><a href="[% Catalyst.uri_for('/user/add') %]">Create Account</a></li>-->
 
-    <li><a HREF="[% Catalyst.uri_for('/user/history') %]">Event</a></li>
-    <li><a HREF="[% Catalyst.uri_for('/news/view') %]">news</a></li>
-    <li><a href="[% Catalyst.uri_for('/about') %]">About</a></li>
+    <li><a HREF="[% Catalyst.uri_for("/menu/search") %]?sel=event">Event</a></li>
+    <li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=news">news</a></li>
+    <li><a href="[% Catalyst.uri_for('/menu/about') %]">About</a></li>
     <li><span>
-		    <form action="[% Catalyst.uri_for('/item/search_do') %]" method="POST">
+		    <form action="[% Catalyst.uri_for('/menu/search') %]" method="POST">
 				<select id="sel" name="sel">
-					<option value="">All</option>
-					[% WHILE (genre = genres.next) %]
-					<option value="[% genre.id %]">[% genre.name %]</option>
-					[% END %]
+					<option value="item">Item</option>
+					<option value="event">Event</option>
+					<option value="news">News</option>
+					<option value="user">User</option>
 				</select>
 				<input type="text" name="txt">
 				<input type="submit" value="Search"/>

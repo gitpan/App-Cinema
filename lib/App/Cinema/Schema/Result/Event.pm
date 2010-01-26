@@ -1,11 +1,15 @@
 package App::Cinema::Schema::Result::Event;
 
-use strict;
-use warnings;
+use Moose;
+extends 'DBIx::Class::Core';
 
-use base 'DBIx::Class';
+#use namespace::alias 'App::Cinema::Schema::Result::Users';
+#use App::Cinema::Schema::Result::Users as => 'Users';
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
+#DBIx::Class::Ordered
+#__PACKAGE__->load_components(qw/ Ordered /);
+#__PACKAGE__->position_column('e_time');
+  
 __PACKAGE__->table("event");
 __PACKAGE__->add_columns(
 	"id",

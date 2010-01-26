@@ -1,10 +1,10 @@
 package App::Cinema::Controller::Menu;
 
-use strict;
-use warnings;
-use base 'Catalyst::Controller';
+use Moose;
+use namespace::autoclean;
+BEGIN { extends qw/Catalyst::Controller/ };
 
-sub index : Private {
+sub home : Local {
 	my ( $self, $c ) = @_;
 	my $result = $c->model('MD::Item')
 	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
@@ -12,8 +12,56 @@ sub index : Private {
 	my $news = $c->model('MD::News')
 	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
 	$c->stash->{news}    = $news;
-	$c->stash->{template} = "menu.tt2";
 }
+
+sub search : Local {
+	my ( $self, $c ) = @_;
+
+	my $genre  = $c->req->params->{sel};
+	my $string = $c->req->params->{txt};
+	my $str    = $c->req->params->{'txt'};
+
+	my @fields;
+	my $uri = '';
+
+	if ( $genre eq 'item' ) {
+		@fields = qw/title plot year/;
+		$uri    = '/item/view';
+	}
+	if ( $genre eq 'news' ) {
+		$uri    = '/news/view';
+		@fields = qw/title desc/;
+	}
+	if ( $genre eq 'event' ) {
+		$uri    = '/user/history';
+		@fields = qw/target desc/;
+	}
+	if ( $genre eq 'user' ) {
+		$uri    = '/user/view';
+		@fields = qw/first_name last_name email_address username/;
+	}
+
+	my @tokens = $str;
+	@fields = cross( \@fields, \@tokens );
+	$c->session->{query} = \@fields;
+	$c->res->redirect( $c->uri_for($uri) );
+}
+
+sub cross {
+	my $columns = shift || [];
+	my $tokens  = shift || [];
+	map { s/%/\\%/g } @$tokens;
+	my @result;
+	foreach my $column (@$columns) {
+		push @result, ( map +{ $column => { -like => "%$_%" } }, @$tokens );
+	}
+	return @result;
+}
+
+
+sub about : Local {
+}
+
 1;
 
 =head1 NAME
@@ -51,4 +99,4 @@ and then propagate to view module.
 
 =head1 AUTHOR
 
-Jeff Mo - L<http://jandc.co.cc/>
+Jeff Mo - <mo0118@gmail.com>

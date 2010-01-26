@@ -1,6 +1,7 @@
 ---
-abstract: 'My demo website of Catalyst framework'
-author: ~
+abstract: 'A simple website to demo how easy to provide CRUD via Catalyst framework'
+author:
+  - 'Jeff Mo - <mo0118@gmail.com>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
 configure_requires:
@@ -38,4 +39,4 @@ requires:
   HTTP::Date: 0
   YAML: 0
   YAML::XS: 0
-version: 1.13
+version: 1.14

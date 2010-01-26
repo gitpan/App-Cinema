@@ -17,3 +17,5 @@ Model::MD:
    schema_class: App::Cinema::Schema
    connect_info:
       - DBI:SQLite:__HOME__/myapp.db
+need_login_errmsg: You need to log in first to use this function.
+delete_do_errmsg: You are not authorized to delete this.

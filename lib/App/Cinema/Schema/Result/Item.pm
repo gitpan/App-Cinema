@@ -1,10 +1,16 @@
 package App::Cinema::Schema::Result::Item;
 
-use strict;
-use warnings;
+use Moose;
+extends 'DBIx::Class';
 
-use base 'DBIx::Class';
+print "bbb\n";
+print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
+print "aaa\n";
+print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
 
+#use namespace::alias "App::Cinema::Schema::Result::Users";
+#use App::Cinema::Schema::Result::GenreItems as => 'GenreItems';
+#use App::Cinema::Schema::Result::Users as => 'Users';
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("item");
 __PACKAGE__->add_columns(

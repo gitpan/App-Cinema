@@ -1,9 +1,7 @@
 package App::Cinema::Schema::Result::News;
 
-use strict;
-use warnings;
-
-use base 'DBIx::Class';
+use Moose;
+extends 'DBIx::Class';
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("news");

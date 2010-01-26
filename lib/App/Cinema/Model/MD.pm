@@ -1,7 +1,10 @@
 package App::Cinema::Model::MD;
 
-use strict;
-use base 'Catalyst::Model::DBIC::Schema';
+use Moose;
+
+BEGIN { extends 'Catalyst::Model::DBIC::Schema' }; #extends 'Catalyst::Model::DBIC::Schema';
+
+#use base 'Catalyst::Model::DBIC::Schema';#this line will cause compilation error
 
 =head1 NAME
 

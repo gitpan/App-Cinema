@@ -39,8 +39,9 @@
 				<a href="[% Catalyst.uri_for('/user/active/0/') _ user.username %]">Inactivate</a>
 			[% END %]
 			</td>
+	-->			
 			<td><a href="[% Catalyst.uri_for('delete_do/') _ user.username %]">Delete</a></td>
-		-->
+	
 		[% END %]
 	</tr>
 	[% END %]

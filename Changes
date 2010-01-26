@@ -24,4 +24,11 @@ This file documents the revision history for Perl extension App::Cinema.
 		- modify /usr/add.tt2: users can choose their role either as user or admin
 1.13 01/20/2010
 		- add POD to User.pm, Item.pm, Menu.pm, About.pm, Login.pm, Logout.pm, News.pm
-		- add News features
+		- add 'News' features
+1.14 01/25/2010
+		- add search by item, news, event, user
+		- move error message to yml
+		- Moose can work well with my app now.
+		- handle duplicated PK exception when adding a user
+		- add Moose class - App::Cinema::Event
+		

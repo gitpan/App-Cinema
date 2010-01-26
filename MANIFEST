@@ -33,6 +33,7 @@ lib/App/Cinema/Controller/pod2htmi.tmp
 lib/App/Cinema/Controller/Root.pm
 lib/App/Cinema/Controller/User.html
 lib/App/Cinema/Controller/User.pm
+lib/App/Cinema/Event.pm
 lib/App/Cinema/Model/MD.html
 lib/App/Cinema/Model/MD.pm
 lib/App/Cinema/Model/pod2htmd.tmp
@@ -74,8 +75,11 @@ root/src/item/add.tt2
 'root/src/item/Copy of search.tt2'
 root/src/item/detail.tt2
 root/src/item/search.tt2
+root/src/item/view.tt2
 root/src/login.tt2
 root/src/menu.tt2
+root/src/menu/about.tt2
+root/src/menu/home.tt2
 root/src/message.tt2
 root/src/news/add.tt2
 root/src/news/detail.tt2
@@ -85,6 +89,7 @@ root/src/ttsite.css
 root/src/user/add.tt2
 root/src/user/edit.tt2
 root/src/user/history.tt2
+root/src/user/login.tt2
 root/src/user/test.tt2
 root/src/user/view.tt2
 root/src/welcome.tt2
@@ -101,6 +106,7 @@ t/02pod.t
 t/03podcoverage.t
 t/controller_Database.t
 t/controller_News.t
+t/controller_Search.t
 t/model_CModel.t
 t/model_MD.t
 t/model_MyAppDB.t

@@ -1,9 +1,10 @@
 package App::Cinema::Schema::Result::UserRoles;
 
-use strict;
-use warnings;
+use Moose;
+extends 'DBIx::Class';
 
-use base 'DBIx::Class';
+#use App::Cinema::Schema::Result::Users as => 'Users';
+#use App::Cinema::Schema::Result::Roles as => 'Roles';
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("user_roles");

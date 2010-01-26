@@ -1,7 +1,7 @@
 [% META title = 'Log in' %]
 
 <!-- Login form -->
-<form method="post" action=" [% Catalyst.uri_for('/login') %] ">
+<form method="post" action=" [% Catalyst.uri_for('/user/login') %] ">
   <p>
   <table>
     <tr>

@@ -1,9 +1,9 @@
 package App::Cinema::Schema::Result::Genre;
 
-use strict;
-use warnings;
+use Moose;
+extends 'DBIx::Class';
 
-use base 'DBIx::Class';
+#use App::Cinema::Schema::Result::GenreItems as => 'GenreItems';
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("genre");

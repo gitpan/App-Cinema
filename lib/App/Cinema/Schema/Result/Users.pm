@@ -1,9 +1,11 @@
 package App::Cinema::Schema::Result::Users;
 
-use strict;
-use warnings;
+use Moose;
+extends 'DBIx::Class';
 
-use base 'DBIx::Class';
+#use App::Cinema::Schema::Result::Event as => 'Event';
+#use App::Cinema::Schema::Result::Item as => 'Item';
+#use App::Cinema::Schema::Result::UserRoles as => 'UserRoles';
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("users");

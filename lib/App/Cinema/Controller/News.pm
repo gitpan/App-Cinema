@@ -1,10 +1,8 @@
 package App::Cinema::Controller::News;
 
-#use Moose;
-#use namespace::autoclean;
-use strict;
-use warnings;
-use base qw(Catalyst::Controller::FormBuilder);
+use Moose;
+use namespace::autoclean;
+BEGIN { extends qw/Catalyst::Controller::FormBuilder/ }
 
 sub add : Local Form {
 	my ( $self, $c ) = @_;
@@ -25,9 +23,13 @@ sub add : Local Form {
 
 sub view : Local {
 	my ( $self, $c ) = @_;
-	my $news = $c->model('MD::News')
-	  ->search( undef, { order_by => { -desc => 'release_date' } } );
-	$c->stash->{news} = $news;
+	my $rs =
+	  $c->model('MD::News')
+	  ->search( $c->session->{query},
+		{ order_by => { -desc => 'release_date' } } );
+
+	#->search( undef, { order_by => { -desc => 'release_date' } } );
+	$c->stash->{news} = $rs;
 }
 1;
 
@@ -65,5 +67,5 @@ This action is used to retrieve news data from database and then propagate to vi
 
 =head1 AUTHOR
 
-Jeff Mo - L<http://jandc.co.cc/>
+Jeff Mo - <mo0118@gmail.com>
 
