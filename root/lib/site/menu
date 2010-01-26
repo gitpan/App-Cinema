@@ -14,9 +14,9 @@
     <li><a HREF="[% Catalyst.uri_for("/menu/search") %]?sel=event">Event</a></li>
     <li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=news">news</a></li>
     <li><a href="[% Catalyst.uri_for('/menu/about') %]">About</a></li>
-    <li><span>
+    <li><span id="search">
 		    <form action="[% Catalyst.uri_for('/menu/search') %]" method="POST">
-				<select id="sel" name="sel">
+				<select id="sel" name="sel" class="options">
 					<option value="item">Item</option>
 					<option value="event">Event</option>
 					<option value="news">News</option>

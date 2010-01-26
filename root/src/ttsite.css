@@ -83,6 +83,11 @@ h1.title {
     color: [% site.col.message %];
 }
 
+#search select {
+	font-family: "DejaVu Serif", "Bitstream Vera Serif", sans-serif;
+    /*font-size: 12pt;*/
+}
+
 .error {
     color: [% site.col.error %];
 }

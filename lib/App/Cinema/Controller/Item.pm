@@ -1,15 +1,12 @@
 package App::Cinema::Controller::Item;
 use Moose;
 use namespace::autoclean;
-BEGIN { extends qw/Catalyst::Controller::FormBuilder/ }
 
-#use base qw/Catalyst::Controller::FormBuilder/;
-#print "App::Cinema::Controller::Item's ISA=\n";
-#print "$_\n", foreach @App::Cinema::Controller::Item::ISA;
+BEGIN {
+	extends qw/Catalyst::Controller::FormBuilder/;
+	our $VERSION = $App::Cinema::VERSION;
+}
 
-#extends 'Catalyst::Controller::FormBuilder';
-#use App::Cinema::Event as => 'Event';
-#use namespace::alias "App::Cinema::Event";
 sub add : Local Form {
 	my ( $self, $c ) = @_;
 	my $form = $self->formbuilder;

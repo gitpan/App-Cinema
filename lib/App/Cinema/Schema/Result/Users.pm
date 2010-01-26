@@ -1,11 +1,10 @@
 package App::Cinema::Schema::Result::Users;
-
 use Moose;
-extends 'DBIx::Class';
-
-#use App::Cinema::Schema::Result::Event as => 'Event';
-#use App::Cinema::Schema::Result::Item as => 'Item';
-#use App::Cinema::Schema::Result::UserRoles as => 'UserRoles';
+use namespace::autoclean;
+BEGIN {
+	extends 'DBIx::Class';
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("users");

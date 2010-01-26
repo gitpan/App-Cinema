@@ -1,10 +1,12 @@
 package App::Cinema::Schema::Result::Event;
-
 use Moose;
-extends 'DBIx::Class::Core';
+use namespace::autoclean;
+BEGIN {
+	extends 'DBIx::Class';
+	our $VERSION = $App::Cinema::VERSION;
+}
 
-#use namespace::alias 'App::Cinema::Schema::Result::Users';
-#use App::Cinema::Schema::Result::Users as => 'Users';
+__PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 
 #DBIx::Class::Ordered
 #__PACKAGE__->load_components(qw/ Ordered /);

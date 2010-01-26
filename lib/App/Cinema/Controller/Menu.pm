@@ -1,17 +1,22 @@
 package App::Cinema::Controller::Menu;
-
 use Moose;
 use namespace::autoclean;
-BEGIN { extends qw/Catalyst::Controller/ };
+
+BEGIN {
+	extends qw/Catalyst::Controller/;
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 sub home : Local {
 	my ( $self, $c ) = @_;
-	my $result = $c->model('MD::Item')
+	my $result =
+	  $c->model('MD::Item')
 	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
-	$c->stash->{items}    = $result;
-	my $news = $c->model('MD::News')
+	$c->stash->{items} = $result;
+	my $news =
+	  $c->model('MD::News')
 	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
-	$c->stash->{news}    = $news;
+	$c->stash->{news} = $news;
 }
 
 sub search : Local {
@@ -28,15 +33,15 @@ sub search : Local {
 		@fields = qw/title plot year/;
 		$uri    = '/item/view';
 	}
-	if ( $genre eq 'news' ) {
+	elsif ( $genre eq 'news' ) {
 		$uri    = '/news/view';
 		@fields = qw/title desc/;
 	}
-	if ( $genre eq 'event' ) {
+	elsif ( $genre eq 'event' ) {
 		$uri    = '/user/history';
 		@fields = qw/target desc/;
 	}
-	if ( $genre eq 'user' ) {
+	elsif ( $genre eq 'user' ) {
 		$uri    = '/user/view';
 		@fields = qw/first_name last_name email_address username/;
 	}
@@ -57,7 +62,6 @@ sub cross {
 	}
 	return @result;
 }
-
 
 sub about : Local {
 }

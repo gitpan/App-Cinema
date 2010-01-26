@@ -5,6 +5,10 @@ BEGIN { extends qw/DBIx::Class::Schema/ };
 
 __PACKAGE__->load_namespaces;
 
+BEGIN {
+	our $VERSION = $App::Cinema::VERSION;
+}
+
 # Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-01-20 13:00:02
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gYgsSPW6WzBi4lBSP5fDew
 

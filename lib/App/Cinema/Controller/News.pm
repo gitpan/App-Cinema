@@ -1,8 +1,10 @@
 package App::Cinema::Controller::News;
-
 use Moose;
 use namespace::autoclean;
-BEGIN { extends qw/Catalyst::Controller::FormBuilder/ }
+BEGIN {
+	extends qw/Catalyst::Controller::FormBuilder/;
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 sub add : Local Form {
 	my ( $self, $c ) = @_;

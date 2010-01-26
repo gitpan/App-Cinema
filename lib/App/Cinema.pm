@@ -9,17 +9,14 @@ use Catalyst qw/
 
   Authentication
   Authorization::Roles
-
   Session
   Session::Store::FastMmap
-  Session::State::Cookie    
+  Session::State::Cookie
   /;
-  
-require App::Cinema::Event;
-#use App::Cinema::Schema::Result::GenreItems as => 'GenreItems';
-#use App::Cinema::Schema::Result::Users as => 'Users';
 
-our $VERSION = '1.14';
+BEGIN {
+	our $VERSION = '1.141';
+}
 
 __PACKAGE__->setup;
 

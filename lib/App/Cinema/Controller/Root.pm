@@ -1,8 +1,10 @@
 package App::Cinema::Controller::Root;
-
 use Moose;
 use namespace::autoclean;
-BEGIN { extends qw/Catalyst::Controller/ };
+BEGIN {
+	extends qw/Catalyst::Controller::FormBuilder/;
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 __PACKAGE__->config->{namespace} = '';
 

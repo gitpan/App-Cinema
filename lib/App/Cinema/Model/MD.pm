@@ -1,10 +1,9 @@
 package App::Cinema::Model::MD;
-
 use Moose;
-
-BEGIN { extends 'Catalyst::Model::DBIC::Schema' }; #extends 'Catalyst::Model::DBIC::Schema';
-
-#use base 'Catalyst::Model::DBIC::Schema';#this line will cause compilation error
+BEGIN {
+	extends 'Catalyst::Model::DBIC::Schema';
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 =head1 NAME
 

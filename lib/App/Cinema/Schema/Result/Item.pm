@@ -1,13 +1,14 @@
 package App::Cinema::Schema::Result::Item;
-
 use Moose;
-extends 'DBIx::Class';
-
-print "bbb\n";
-print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
-print "aaa\n";
-print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
-
+use namespace::autoclean;
+BEGIN {
+	extends 'DBIx::Class';
+	our $VERSION = $App::Cinema::VERSION;
+}
+#print "bbb\n";
+#print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
+#print "aaa\n";
+#print "$_\n" for @App::Cinema::Schema::Result::Item::ISA;
 #use namespace::alias "App::Cinema::Schema::Result::Users";
 #use App::Cinema::Schema::Result::GenreItems as => 'GenreItems';
 #use App::Cinema::Schema::Result::Users as => 'Users';

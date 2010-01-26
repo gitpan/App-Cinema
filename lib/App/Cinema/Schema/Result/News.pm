@@ -1,7 +1,10 @@
 package App::Cinema::Schema::Result::News;
-
 use Moose;
-extends 'DBIx::Class';
+use namespace::autoclean;
+BEGIN {
+	extends 'DBIx::Class';
+	our $VERSION = $App::Cinema::VERSION;
+}
 
 __PACKAGE__->load_components( "InflateColumn::DateTime", "Core" );
 __PACKAGE__->table("news");

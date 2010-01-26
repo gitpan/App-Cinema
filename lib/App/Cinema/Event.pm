@@ -2,6 +2,11 @@ package App::Cinema::Event;
 use Moose;
 use namespace::autoclean;
 use HTTP::Date qw/time2iso/;
+
+BEGIN {
+	our $VERSION = $App::Cinema::VERSION;
+}
+
 =head1 NAME
 
 App::Cinema::Event - Record a user's 
@@ -62,7 +67,7 @@ This method gets now time of this object.
 has 'now' => (
 	is      => 'ro',
 	isa     => 'Str',
-	default => sub {time2iso(time)}
+	default => sub { time2iso(time) }
 );
 
 =item C<target>

@@ -1,7 +1,10 @@
 package App::Cinema::Controller::User;
 use Moose;
 use namespace::autoclean;
-BEGIN { extends qw/Catalyst::Controller::FormBuilder/ }
+BEGIN {
+	extends qw/Catalyst::Controller::FormBuilder/;
+	our $VERSION = $App::Cinema::VERSION;
+}
 use TryCatch;
 require App::Cinema::Event;
 
