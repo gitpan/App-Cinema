@@ -21,11 +21,15 @@ sub captcha : Local {
 
 	# Check response
 	if ($challenge) {
+
+		#		my $result = $rc->check_answer(
+		#			'6Ld_2QoAAAAAAGFBZHFdBj9_rK4voLSEZK3oY9o8',
+		#			'75.127.98.108', $challenge, $response
+		#		);
 		my $result = $rc->check_answer(
 			$c->config->{PRI_KEY},
 			$c->config->{REMOTE_IP},
-			$challenge, 
-			$response
+			$challenge, $response
 		);
 		if ( $result->{is_valid} ) {
 			$c->session->{human} = 1;
@@ -55,7 +59,6 @@ sub login : Local Form {
 	my $pwd = $form->field('password') || "";
 
 	# If the username and password values were found in form
-	#if ( $uid && $pwd ) {
 	if ( $form->submitted && $form->validate ) {
 		my $status = $c->authenticate(
 			{
@@ -103,12 +106,8 @@ sub history : Local {
 		);
 	}
 	else {
-		$rs = $c->model('MD::Event')->search(
-			$c->session->{query},
-
-			#{ uid => $c->user->obj->username() },
-			{ rows => 10, order_by => { -desc => 'e_time' } }
-		);
+		$rs = $c->model('MD::Event')->search( $c->session->{query},
+			{ rows => 10, order_by => { -desc => 'e_time' } } );
 	}
 
 	#page navigation
@@ -122,19 +121,10 @@ sub history : Local {
 sub add : Local Form {
 	my ( $self, $c ) = @_;
 	my $form = $self->formbuilder;
-
-	#	$form->field(
-	#		name    => 'role',
-	#		options => [ [ 1 => 'user' ], [ 2 => 'admin' ] ],
-	#		value   => 1
-	#	);
-	#	$form->field(
-	#		name     => 'role',
-	#		required => 1,
-	#		options  => [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
-	#	);
 	if ( $form->submitted && $form->validate ) {
-		try {    #1/24
+		eval {
+
+			#		try {                         #1/24
 			my $row = $c->model('MD::Users')->create(
 				{
 					first_name    => $form->field('fname'),
@@ -146,6 +136,7 @@ sub add : Local Form {
 					user_roles    => [ { role_id => $form->field('role') }, ],
 				}
 			);
+
 			my $e = App::Cinema::Event->new();
 			$e->uid( $row->username );
 			$e->desc(' created account : ');
@@ -154,10 +145,15 @@ sub add : Local Form {
 
 			$c->flash->{message} = 'Added ' . $row->first_name;
 			$c->res->redirect( $c->uri_for('/user/login') );
-		}
-		catch( DBIx::Class::Exception $e) {
-			$c->stash->{error} = $c->config->{err_duplicated_pk};
 		};
+		if ($@) {
+			$c->stash->{error} = $@;
+		}
+
+		#		}
+		#		catch( DBIx::Class::Exception $e) {
+		#			$c->stash->{error} = $c->config->{err_duplicated_pk};
+		#		};
 	}
 }
 

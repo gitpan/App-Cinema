@@ -15,7 +15,7 @@ sub add : Local Form {
 		my $row = $c->model('MD::News')->create(
 			{
 				title        => $form->field('title'),
-				desc         => $form->field('desc'),
+				_desc        => $form->field('desc'),
 				release_date => HTTP::Date::time2iso(time),
 			}
 		);
@@ -35,7 +35,6 @@ sub view : Local {
 	my $rs = $c->model('MD::News')->search( $c->session->{query},
 		{ order_by => { -desc => 'release_date' } } );
 
-	#->search( undef, { order_by => { -desc => 'release_date' } } );
 	$c->stash->{news} = $rs;
 }
 1;

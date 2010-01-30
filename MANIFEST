@@ -2,6 +2,7 @@
 App-Cinema-1.11.tar.gz
 App-Cinema-1.12.tar.gz
 App-Cinema-1.14.tar.gz
+App-Cinema-1.15.tar.gz
 app_cinema.yml
 Changes
 inc/Module/AutoInstall.pm
@@ -38,6 +39,7 @@ lib/App/Cinema/Controller/User.pm
 lib/App/Cinema/Event.pm
 lib/App/Cinema/Model/MD.html
 lib/App/Cinema/Model/MD.pm
+lib/App/Cinema/Model/MD.pm.new
 lib/App/Cinema/Model/pod2htmd.tmp
 lib/App/Cinema/Model/pod2htmi.tmp
 lib/App/Cinema/Schema.pm

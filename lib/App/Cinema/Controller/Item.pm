@@ -47,7 +47,6 @@ sub detail : Local {
 	$c->stash->{item} = $c->model('MD::Item')->find($id);
 }
 
-#display only; reused by checkout and delete action
 sub view : Local {
 	my ( $self, $c ) = @_;
 	my $rs = $c->model('MD::Item')->search( $c->session->{query},
@@ -60,7 +59,7 @@ sub delete_do : Local {
 	if ( $c->check_user_roles(qw/superadmin/) ) {
 		$c->model('MD::Item')->find($id)->delete();
 		my $e = App::Cinema::Event->new(
-			desc   => ' deleted movie : ',
+			_desc  => ' deleted movie : ',
 			target => $info
 		);
 		$e->insert($c);

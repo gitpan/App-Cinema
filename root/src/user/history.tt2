@@ -8,7 +8,7 @@
 	<tr>
 		<!--<td>[% event.id%]</td>-->
 		<td>[% event.uid%]</td>
-		<td>[% event.desc%]</td>
+		<td>[% event._desc%]</td>
 		<td><span id="event_object">[% event.target %]</span></td>
 		<td>[% event.e_time%]</td>		
 	</tr>

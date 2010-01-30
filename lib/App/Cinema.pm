@@ -15,13 +15,11 @@ use Catalyst qw/
   /;
 
 BEGIN {
-	our $VERSION = '1.142';
+	our $VERSION = '1.15';
 }
 
+#after this line, the $VERSION of other classes are configured
 __PACKAGE__->setup;
-
-#after this line, the $VERSION of other
-#classes are configured
 
 1;
 

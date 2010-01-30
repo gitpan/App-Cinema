@@ -7,19 +7,6 @@ BEGIN {
 	our $VERSION = $App::Cinema::VERSION;
 }
 
-#__PACKAGE__->config->{captcha} = {
-#	session_name => 'captcha_string',
-#	new          => {
-#		width   => 80,
-#		height  => 30,
-#		lines   => 7,
-#		gd_font => 'giant',
-#	},
-#	create   => [qw/normal rect/],
-#	particle => [100],
-#	out      => { force => 'jpeg' }
-#};
-
 __PACKAGE__->config->{namespace} = '';
 
 sub index : Path : Args(0) {

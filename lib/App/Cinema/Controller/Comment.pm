@@ -50,7 +50,7 @@ sub add : Local Form {
 			$c->model('MD::Comment')->create(
 				{
 					uid    => $c->user->obj->username(),
-					desc   => $comment,
+					_desc  => $comment,
 					e_time => HTTP::Date::time2iso(time),
 				}
 			);

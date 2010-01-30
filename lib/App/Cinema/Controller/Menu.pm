@@ -35,11 +35,11 @@ sub search : Local {
 	}
 	elsif ( $genre eq 'news' ) {
 		$uri    = '/news/view';
-		@fields = qw/title desc/;
+		@fields = qw/title _desc/;
 	}
 	elsif ( $genre eq 'event' ) {
 		$uri    = '/user/history';
-		@fields = qw/target desc/;
+		@fields = qw/target _desc/;
 	}
 	elsif ( $genre eq 'user' ) {
 		$uri    = '/user/view';
