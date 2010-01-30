@@ -1,32 +1,72 @@
 package App::Cinema::Controller::User;
 use Moose;
 use namespace::autoclean;
+
 BEGIN {
 	extends qw/Catalyst::Controller::FormBuilder/;
 	our $VERSION = $App::Cinema::VERSION;
 }
 use TryCatch;
+use Captcha::reCAPTCHA;
 require App::Cinema::Event;
 
-sub login : Local {
+sub captcha : Local {
+	my ( $self, $c ) = @_;
+	my $challenge = $c->req->param('recaptcha_challenge_field');
+	my $response  = $c->req->param('recaptcha_response_field');
+	my $rc        = Captcha::reCAPTCHA->new;
+	my $pub_key   = $c->config->{PUB_KEY};
+
+	$c->session->{human} = undef;
+
+	# Check response
+	if ($challenge) {
+		my $result = $rc->check_answer(
+			$c->config->{PRI_KEY},
+			$c->config->{REMOTE_IP},
+			$challenge, 
+			$response
+		);
+		if ( $result->{is_valid} ) {
+			$c->session->{human} = 1;
+			$c->res->redirect( $c->uri_for('/user/login') );
+			return;
+		}
+		else {
+			$c->stash->{err} = $result->{error};
+		}
+	}
+	$c->stash->{key} = $pub_key;
+	$c->stash->{rc}  = $rc;
+}
+
+sub login : Local Form {
 	my ( $self, $c ) = @_;
 
+	if ( !$c->session->{human} ) {
+		$c->res->redirect( $c->uri_for('/user/captcha') );
+		return;
+	}
+
+	my $form = $self->formbuilder;
+
 	# Get the username and password from form
-	my $username = $c->req->params->{username} || "";
-	my $password = $c->req->params->{password} || "";
+	my $uid = $form->field('username') || "";
+	my $pwd = $form->field('password') || "";
 
 	# If the username and password values were found in form
-	if ( $username && $password ) {
+	#if ( $uid && $pwd ) {
+	if ( $form->submitted && $form->validate ) {
 		my $status = $c->authenticate(
 			{
-				username => $username,
-				password => $password
+				username => $uid,
+				password => $pwd
 			}
 		);
 		if ($status) {
 
 			# If successful, then let them use the application
-			$c->flash->{message} = "Welcome back, " . $username;
+			$c->flash->{message} = "Welcome back, " . $uid;
 			$c->res->redirect( $c->uri_for('/menu/home') );
 			return;
 		}
@@ -40,6 +80,7 @@ sub logout : Local {
 	my ( $self, $c ) = @_;
 
 	# Clear the user's state
+	$c->session->{human} = undef;
 	$c->logout;
 	$c->flash->{message} = 'Log out successfully.';
 
@@ -54,16 +95,18 @@ sub history : Local {
 		$c->stash->{template} = 'result.tt2';
 		return 0;
 	}
-	my $rs;	
-	if ( $c->check_user_roles(qw/admin/) ) {
+	my $rs;
+	if ( $c->check_user_roles(qw/superadmin/) ) {
 		$rs = $c->model('MD::Event')->search(
-			$c->session->{query},#undef               
+			$c->session->{query},    #undef
 			{ rows => 10, order_by => { -desc => 'e_time' } }
 		);
 	}
 	else {
 		$rs = $c->model('MD::Event')->search(
-			{ $c->flashsession->{query}, uid => $c->user->obj->username() },
+			$c->session->{query},
+
+			#{ uid => $c->user->obj->username() },
 			{ rows => 10, order_by => { -desc => 'e_time' } }
 		);
 	}
@@ -79,11 +122,17 @@ sub history : Local {
 sub add : Local Form {
 	my ( $self, $c ) = @_;
 	my $form = $self->formbuilder;
-	$form->field(
-		name     => 'role',
-		required => 1,
-		options  => [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
-	);
+
+	#	$form->field(
+	#		name    => 'role',
+	#		options => [ [ 1 => 'user' ], [ 2 => 'admin' ] ],
+	#		value   => 1
+	#	);
+	#	$form->field(
+	#		name     => 'role',
+	#		required => 1,
+	#		options  => [ map { [ $_->id, $_->role ] } $c->model('MD::Roles')->all ]
+	#	);
 	if ( $form->submitted && $form->validate ) {
 		try {    #1/24
 			my $row = $c->model('MD::Users')->create(
@@ -104,12 +153,10 @@ sub add : Local Form {
 			$e->insert($c);
 
 			$c->flash->{message} = 'Added ' . $row->first_name;
-			$c->res->redirect( $c->uri_for('/login') );
+			$c->res->redirect( $c->uri_for('/user/login') );
 		}
 		catch( DBIx::Class::Exception $e) {
-			$c->log->debug( 'cmo:error=', $e, "\n" );
-			  $c->stash->{error} =
-'This userid is already used in the system. Please choose another one.';
+			$c->stash->{error} = $c->config->{err_duplicated_pk};
 		};
 	}
 }
@@ -159,20 +206,20 @@ sub view : Local {
 		$c->stash->{template} = 'result.tt2';
 		return 0;
 	}
-	if ( $c->check_user_roles(qw/admin/) ) {
+	if ( $c->check_user_roles(qw/superadmin/) ) {
 		$c->stash->{users} =
 		  $c->model('MD::Users')->search( $c->session->{query} );
 	}
 	else {
 		$c->stash->{users} =
-		  $c->model('MD::Users')->search( $c->session->{query},
-			{ username => $c->user->obj->username() } );
+		  $c->model('MD::Users')
+		  ->search( username => $c->user->obj->username() );
 	}
 }
 
 sub delete_do : Local {
 	my ( $self, $c, $id ) = @_;
-	if ( $c->check_user_roles(qw/admin/) ) {
+	if ( $c->check_user_roles(qw/superadmin/) ) {
 		$c->model('MD::Users')->find($id)->delete();
 
 		my $e = App::Cinema::Event->new();

@@ -15,16 +15,20 @@ use Catalyst qw/
   /;
 
 BEGIN {
-	our $VERSION = '1.141';
+	our $VERSION = '1.142';
 }
 
 __PACKAGE__->setup;
+
+#after this line, the $VERSION of other
+#classes are configured
 
 1;
 
 =head1 NAME
 
-App::Cinema - A simple website to demo how easy to provide CRUD via Catalyst framework
+App::Cinema - demo how to build a dynamic web application effectively 
+via Catalyst framework 
 
 =head1 AUTHOR
 

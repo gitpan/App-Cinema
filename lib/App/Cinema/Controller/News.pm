@@ -1,6 +1,7 @@
 package App::Cinema::Controller::News;
 use Moose;
 use namespace::autoclean;
+
 BEGIN {
 	extends qw/Catalyst::Controller::FormBuilder/;
 	our $VERSION = $App::Cinema::VERSION;
@@ -13,7 +14,7 @@ sub add : Local Form {
 	if ( $form->submitted && $form->validate ) {
 		my $row = $c->model('MD::News')->create(
 			{
-				title        => $form->field('name'),
+				title        => $form->field('title'),
 				desc         => $form->field('desc'),
 				release_date => HTTP::Date::time2iso(time),
 			}
@@ -25,9 +26,13 @@ sub add : Local Form {
 
 sub view : Local {
 	my ( $self, $c ) = @_;
-	my $rs =
-	  $c->model('MD::News')
-	  ->search( $c->session->{query},
+	if ( !$c->user_exists ) {
+		$c->stash->{error}    = $c->config->{need_login_errmsg};
+		$c->stash->{template} = 'result.tt2';
+		return;
+	}
+
+	my $rs = $c->model('MD::News')->search( $c->session->{query},
 		{ order_by => { -desc => 'release_date' } } );
 
 	#->search( undef, { order_by => { -desc => 'release_date' } } );

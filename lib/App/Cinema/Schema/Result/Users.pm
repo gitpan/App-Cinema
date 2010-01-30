@@ -1,6 +1,7 @@
 package App::Cinema::Schema::Result::Users;
 use Moose;
 use namespace::autoclean;
+
 BEGIN {
 	extends 'DBIx::Class';
 	our $VERSION = $App::Cinema::VERSION;
@@ -66,6 +67,10 @@ __PACKAGE__->has_many(
 __PACKAGE__->has_many(
 	"items",
 	"App::Cinema::Schema::Result::Item",
+	{ "foreign.uid" => "self.username" },
+);
+__PACKAGE__->has_many(
+	"comments", "App::Cinema::Schema::Result::Comment",
 	{ "foreign.uid" => "self.username" },
 );
 

@@ -1,12 +1,11 @@
-name: news_add
+name: comment_add
 method: POST
 fields:
-    title:
-        type:  text
-        size:  40
     desc:
+        label: Comment
         type:  textarea
         cols:  60
         rows:  10
-submit: Save
+        required: 1
+submit: Preview, Save
 stylesheet: 1

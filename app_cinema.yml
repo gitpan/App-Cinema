@@ -17,5 +17,9 @@ Model::MD:
    schema_class: App::Cinema::Schema
    connect_info:
       - DBI:SQLite:__HOME__/myapp.db
+err_duplicated_pk: This userid is already used in the system. Please choose another one.
 need_login_errmsg: You need to log in first to use this function.
-delete_do_errmsg: You are not authorized to delete this.
+delete_do_errmsg:  You are not authorized to delete this.
+PUB_KEY: 6Ld_2QoAAAAAAC5GsXIBmAieDgPRCi7l99N40Npa
+PRI_KEY: 6Ld_2QoAAAAAAGFBZHFdBj9_rK4voLSEZK3oY9o8
+REMOTE_IP: 75.127.98.108

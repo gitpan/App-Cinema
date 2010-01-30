@@ -20,6 +20,7 @@ inc/Module/Install/WriteAll.pm
 lib/App/Cinema.pm
 lib/App/Cinema/Controller/About.html
 lib/App/Cinema/Controller/About.pm
+lib/App/Cinema/Controller/Comment.pm
 lib/App/Cinema/Controller/Event.pm
 lib/App/Cinema/Controller/Item.html
 lib/App/Cinema/Controller/Item.pm
@@ -40,6 +41,7 @@ lib/App/Cinema/Model/MD.pm
 lib/App/Cinema/Model/pod2htmd.tmp
 lib/App/Cinema/Model/pod2htmi.tmp
 lib/App/Cinema/Schema.pm
+lib/App/Cinema/Schema/Result/Comment.pm
 lib/App/Cinema/Schema/Result/Event.pm
 lib/App/Cinema/Schema/Result/Genre.pm
 lib/App/Cinema/Schema/Result/GenreItems.pm
@@ -56,10 +58,12 @@ myapp.db
 README
 root/favicon.ico
 root/forms/code/history.fb
+root/forms/comment/add.fb
 root/forms/item/add.fb
 root/forms/news/add.fb
 root/forms/user/add.fb
 root/forms/user/edit.fb
+root/forms/user/login.fb
 root/forms/user/test.fb
 root/lib/config/col
 root/lib/config/main
@@ -71,6 +75,8 @@ root/lib/site/layout
 root/lib/site/menu
 root/lib/site/wrapper
 root/src/about.tt2
+root/src/comment/add.tt2
+root/src/comment/view.tt2
 root/src/error.tt2
 root/src/item/add.tt2
 'root/src/item/Copy of search.tt2'
@@ -88,6 +94,7 @@ root/src/news/view.tt2
 root/src/result.tt2
 root/src/ttsite.css
 root/src/user/add.tt2
+root/src/user/captcha.tt2
 root/src/user/edit.tt2
 root/src/user/history.tt2
 root/src/user/login.tt2
@@ -105,6 +112,8 @@ script/dispatch.fcgi
 t/01app.t
 t/02pod.t
 t/03podcoverage.t
+t/controller_Captcha.t
+t/controller_Comment.t
 t/controller_Database.t
 t/controller_News.t
 t/controller_Search.t

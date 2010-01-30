@@ -12,6 +12,7 @@ fields:
 		label: Email
 		size: 30
 		validate: EMAIL
+		required: 1
 	uid:
 		label: User Id
 		size: 30
@@ -21,4 +22,8 @@ fields:
 		size: 30
 		type: Password
 		required: 1
-	
+	role:
+        label:   Role
+        options: 1=user, 2=admin
+	    value: 1
+stylesheet: 1

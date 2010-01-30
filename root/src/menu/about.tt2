@@ -1,25 +1,31 @@
 [% META title = 'ABOUT' %]
-<div id="about">
-<b>History</b>
-<p>
-Version 1.14 released - 01/25/2010<br>
-Version 1.13 released - 01/20/2010<br>
-Version 1.12 released - 01/19/2010<br>
-Version 1.11 released - 01/15/2010<br>
-Version 1.10 released - 01/12/2010<br>
-Version 1.05 released - 01/11/2010<br>
-Version 1.02 released - 01/05/2010<br>
-Version 1.00 released - 01/04/2010<br>
-</p>
+<div id="about" size = "50%">
+<!--
 <b>Reference</b>
 <p>
-<a href="http://search.cpan.org/~sman/">CPAN search</a><br>
-<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>
-<a href="http://perlmonks.org/index.pl?node_id=6364;user=sman">My PerlMonk Q&A</a><br>
-<a href="http://students.engr.scu.edu/~cmo/index.html">My CGI project</a><br>
+</p>
+-->
+<b>Comment</b>
+<p>
+[% IF !Catalyst.user_exists %]
+Please login in first before leaving your comment.</p>
+[% END %]
+<ul>
+	<li><a href="[% base %]comment/add">Add</a>
+	</li>
+	<li><a href="[% base %]comment/view">View</a>
+	</li>
+</ul> 
 </p>
 <b>My Profile</b>
-<p>
-<a href="[% base %]static/Resume_Jeff Mo.pdf">Resume</a><br>
-</p>
+<!--<a href="http://search.cpan.org/~sman/">CPAN Project</a><br>-->
+<!--<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>-->
+<ul>
+	<li><a href="http://students.engr.scu.edu/~cmo/index.html">Course Project</a><br>
+	</li>
+	<li><a href="http://perlmonks.org/index.pl?node_id=6364;user=sman">PerlMonk Q&A</a><br>
+	</li>
+	<li><a href="[% base %]static/Resume_Jeff Mo.pdf">Resume</a><br>
+	</li>
+</ul>
 </div>

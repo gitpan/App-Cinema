@@ -1,25 +1,20 @@
 <!-- BEGIN site/menu -->
   <ul>
     <!--<li class="current_page_item"><a href="/">Home</a></li>-->
-    <li><a HREF="[% Catalyst.uri_for('/menu/home') %]">Home</a></li>
+    <li><a title="home page" HREF="[% Catalyst.uri_for('/menu/home') %]">Home</a></li>
     [% IF !Catalyst.user_exists %]
-    <li><a HREF="[% Catalyst.uri_for('/user/add') %]">Register</a></li>
+    <li><a title="sign in" HREF="[% Catalyst.uri_for('/user/add') %]">Register</a></li>
     [% END %]
-    [% IF Catalyst.check_user_roles('admin') %]
-    <li><a HREF="[% Catalyst.uri_for('/item/add') %]">Admin</a></li>
-    [% END %]
-    <li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=user">Account</a></li>
-    <!--<li><a href="[% Catalyst.uri_for('/user/add') %]">Create Account</a></li>-->
-
-    <li><a HREF="[% Catalyst.uri_for("/menu/search") %]?sel=event">Event</a></li>
-    <li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=news">news</a></li>
-    <li><a href="[% Catalyst.uri_for('/menu/about') %]">About</a></li>
+    <li><a title="manage your account" HREF="[% Catalyst.uri_for('/menu/search') %]?sel=user">Account</a></li>
+    <li><a title="programmer's daily log" HREF="[% Catalyst.uri_for('/menu/search') %]?sel=news">MyLog</a></li>
+    <li><a title="users' history" HREF="[% Catalyst.uri_for("/menu/search") %]?sel=event">event</a></li>
+    <li><a title="comment, author's profile" HREF="[% Catalyst.uri_for('/menu/about') %]">About</a></li>
     <li><span id="search">
 		    <form action="[% Catalyst.uri_for('/menu/search') %]" method="POST">
 				<select id="sel" name="sel" class="options">
 					<option value="item">Item</option>
-					<option value="event">Event</option>
-					<option value="news">News</option>
+					<option value="news">MyLog</option>
+					<option value="event">Event</option>					
 					<option value="user">User</option>
 				</select>
 				<input type="text" name="txt">

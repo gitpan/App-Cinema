@@ -57,9 +57,8 @@ sub view : Local {
 
 sub delete_do : Local {
 	my ( $self, $c, $id, $info ) = @_;
-	if ( $c->check_user_roles(qw/admin/) ) {
+	if ( $c->check_user_roles(qw/superadmin/) ) {
 		$c->model('MD::Item')->find($id)->delete();
-
 		my $e = App::Cinema::Event->new(
 			desc   => ' deleted movie : ',
 			target => $info

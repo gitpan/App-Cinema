@@ -20,6 +20,10 @@
       message = site.rgb.green
       error   = site.rgb.red
       link    = site.rgb.orange
-      border  = site.rgb.pink
+      border  = site.rgb.pink      
    };
+   
+   site.font = {
+   	  family  = "DejaVu Serif" 
+   }
 %]

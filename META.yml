@@ -1,5 +1,5 @@
 ---
-abstract: 'A simple website to demo how easy to provide CRUD via Catalyst framework'
+abstract: 'demo how to build a dynamic web application effectively '
 author:
   - 'Jeff Mo - <mo0118@gmail.com>'
 build_requires:
@@ -39,4 +39,4 @@ requires:
   HTTP::Date: 0
   YAML: 0
   YAML::XS: 0
-version: 1.141
+version: 1.142

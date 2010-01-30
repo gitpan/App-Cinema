@@ -3,8 +3,17 @@
 <p><b>What is</b>
 </p>
 <p>
-Welcome to JandC.CO.CC. This website is designed to demo how to use Catalyst framework to build a dynamic web application effectively and efficiently. 
-I am a big fan of movies and all the data here is for testing and demo only. Please feel free to start from anywhere and take a shot.</p> 
+Welcome to JandC.CO.CC. This website is designed to demo how to use 
+<span style="font-weight: bold;">Catalyst</span> framework (Perl) to build a dynamic web application effectively and efficiently. 
+<ul>	
+	<li>You can either register as a 'user' or 'admin'.</li>
+	<li>Please help me improve this website via leaving 
+<span style="font-weight: bold;; ">your comment</span> in 
+<a href="[% Catalyst.uri_for('/menu/about') %]">ABOUT</a> section as well.
+	</li>
+	
+	<li>All the data here is for testing and demo only.</li></ul>
+</p> 
 <p><b>Latest Movies</b>
 [% IF Catalyst.check_user_roles('admin') %]
  | <a href="[% Catalyst.uri_for('/item/add/') %]">Add</a>
@@ -17,22 +26,21 @@ I am a big fan of movies and all the data here is for testing and demo only. Ple
 		[% item.release_date %]	
 	</li>
 [% END %]
-	<li><a href="[% Catalyst.uri_for('/item/search/') %]">More...</a>
+	<li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=item">More...</a>
 	</li>
 </ul>
-<p><b>Latest News</b> 
-[% IF Catalyst.check_user_roles('admin') %]
+<p><b>My Log</b> 
+[% IF Catalyst.check_user_roles('superadmin') %]
 | <a href="[% base %]news/add">Add</a>
 [% END %]
 </p>
 <ul>
 [% WHILE (new = news.next) %]
 	<li>
-		<a href="[% Catalyst.uri_for('/news/detail/') _ new.id %]">[% new.title %]</a>		
-		[% new.release_date %]	
+		[% new.title %] | [% new.release_date %]	
 	</li>
 [% END %]
-	<li><a href="[% Catalyst.uri_for('/news/view/') %]">More...</a>
+	<li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=news">More...</a>
 	</li>
 </ul>
 </div>
