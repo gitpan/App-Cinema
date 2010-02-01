@@ -56,26 +56,30 @@ sub view : Local {
 
 sub delete_do : Local {
 	my ( $self, $c, $id, $info ) = @_;
-	if ( $c->check_user_roles(qw/superadmin/) ) {
-		$c->model('MD::Item')->find($id)->delete();
-		my $e = App::Cinema::Event->new(
-			_desc  => ' deleted movie : ',
-			target => $info
-		);
-		$e->insert($c);
+	eval {
+		$c->assert_any_user_role(qw/sysadmin admin/);
+	};
+	if ($@) {
+		$c->flash->{error} = $c->config->{need_auth_msg};
+		$c->res->redirect( $c->uri_for('/item/view') );
+		return;
+	}
 
-		$c->flash->{message} = "Item deleted";
-	}
-	else {
-		$c->flash->{error} = $c->config->{delete_do_errmsg};
-	}
+	$c->model('MD::Item')->find($id)->delete();
+
+	my $e = App::Cinema::Event->new();
+	$e->desc(' deleted movie : ');
+	$e->target( $info );
+	$e->insert($c);
+
+	$c->flash->{message} = "Item deleted";
 	$c->res->redirect( $c->uri_for('/item/view') );
 }
 
 sub checkout_do : Local {
 	my ( $self, $c, $id, $info ) = @_;
 	if ( !$c->user_exists ) {
-		$c->flash->{error} = $c->config->{need_login_errmsg};
+		$c->flash->{error} = $c->config->{need_auth_msg};
 		$c->res->redirect( $c->uri_for('/item/view') );
 		return 0;
 	}

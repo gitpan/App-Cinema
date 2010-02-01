@@ -15,7 +15,7 @@ actions in the system.
 =head1 SYNOPSIS
 
 	my $e = App::Cinema::Event->new();
-	$e->_desc(' deleted account : ');
+	$e->content(' deleted account : ');
 	$e->target($id);
 	$e->insert($c);
 	
@@ -104,7 +104,7 @@ sub insert {
 	$c->model('MD::Event')->create(
 		{
 			uid    => $username,
-			_desc  => $self->desc(),
+			content  => $self->desc(),
 			target => $self->target(),
 			e_time => $self->now()
 		}

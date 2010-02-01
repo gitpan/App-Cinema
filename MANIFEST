@@ -5,6 +5,7 @@ App-Cinema-1.14.tar.gz
 App-Cinema-1.15.tar.gz
 app_cinema.yml
 Changes
+deploy
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
@@ -34,6 +35,7 @@ lib/App/Cinema/Controller/News.pm
 lib/App/Cinema/Controller/pod2htmd.tmp
 lib/App/Cinema/Controller/pod2htmi.tmp
 lib/App/Cinema/Controller/Root.pm
+lib/App/Cinema/Controller/Test.pm
 lib/App/Cinema/Controller/User.html
 lib/App/Cinema/Controller/User.pm
 lib/App/Cinema/Event.pm
@@ -88,12 +90,15 @@ root/src/item/view.tt2
 root/src/login.tt2
 root/src/menu.tt2
 root/src/menu/about.tt2
+root/src/menu/dbschema.tt2
 root/src/menu/home.tt2
+root/src/menu/howto.tt2
 root/src/message.tt2
 root/src/news/add.tt2
 root/src/news/detail.tt2
 root/src/news/view.tt2
 root/src/result.tt2
+root/src/test/index.tt2
 root/src/ttsite.css
 root/src/user/add.tt2
 root/src/user/captcha.tt2
@@ -103,6 +108,7 @@ root/src/user/login.tt2
 root/src/user/test.tt2
 root/src/user/view.tt2
 root/src/welcome.tt2
+root/static/db.txt
 root/static/index.html
 'root/static/Resume_Jeff Mo.pdf'
 run
@@ -119,8 +125,12 @@ t/controller_Comment.t
 t/controller_Database.t
 t/controller_News.t
 t/controller_Search.t
+t/controller_Test.t
+t/controller_test.t
 t/model_CModel.t
 t/model_MD.t
 t/model_MyAppDB.t
 t/model_MyModel.t
 t/model_TestDatabase.t
+t/view_Email-Template.t
+t/view_Email.t

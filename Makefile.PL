@@ -27,6 +27,7 @@ requires 'DBD::SQLite';
 requires 'YAML::XS';
 requires 'YAML';
 requires 'HTTP::Date';
+requires 'Captcha::reCAPTCHA';
 
 catalyst;
 

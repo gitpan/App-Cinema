@@ -4,16 +4,59 @@
 </p>
 <p>
 Welcome to JandC.CO.CC. This website is designed to demo how to use 
-<span style="font-weight: bold;">Catalyst</span> framework (Perl) to build a dynamic web application effectively and efficiently. 
-<ul>	
-	<li>You can either register as a 'user' or 'admin'.</li>
-	<li>Please help me improve this website via leaving 
-<span style="font-weight: bold;; ">your comment</span> in 
-<a href="[% Catalyst.uri_for('/menu/about') %]">ABOUT</a> section as well.
-	</li>
-	
-	<li>All the data here is for testing and demo only.</li></ul>
+<span style="font-weight: bold;">Catalyst</span> and <span style="font-weight: bold;">
+Moose</span> to build a 
+secured web application with less SQL, HTML, and JavaScript but more 
+flexibility and efficiency. <br>You can start from 
+<a href="[% Catalyst.uri_for('/menu/howto') %]">
+	How-to</a> 
+</p>
+<!--
+<p><b>You can</b></p>
+<p>
+<ul>
+	<li>check <a href="[% Catalyst.uri_for('/menu/howto') %]">
+	How-to</a> before moving on</li>
+	<li>help improve this website via leaving your  
+<a href="[% Catalyst.uri_for('/comment/add') %]">comment</a>
+	</li>	
+</ul>
+-->
 </p> 
+<b>Features</b>
+<ul>
+<table>
+<tbody>
+<tr>
+<td ><li>LAMP</li></td>
+<td >Linux, Apache, MySQL, and Perl</td>
+</tr>
+<tr>
+<td ><li>Security</li></td>
+<td >Authentication and Role Based
+Access Control</td>
+</tr>
+<tr>
+<td ><li>CRUD</li></td>
+<td >Create, read, update and delete
+of persistent storage</td>
+</tr>
+<!--
+<tr>
+<td ><li>Portability</li></td>
+<td >Can switch to MySQL, SQLite and
+other DB easily<br>
+</td>
+</tr>
+<tr>
+-->
+<td ><li>ORM</li></td>
+<td >Object-Relational Mapping is
+used extensively</td>
+</tr>
+</tbody>
+</table>
+</ul>
 <p><b>Latest Movies</b>
 [% IF Catalyst.check_user_roles('admin') %]
  | <a href="[% Catalyst.uri_for('/item/add/') %]">Add</a>
@@ -29,11 +72,10 @@ Welcome to JandC.CO.CC. This website is designed to demo how to use
 	<li><a HREF="[% Catalyst.uri_for('/menu/search') %]?sel=item">More...</a>
 	</li>
 </ul>
-<p><b>My Log</b> 
-[% IF Catalyst.check_user_roles('superadmin') %]
+<b>My Log</b> 
+[% IF Catalyst.check_any_user_role('sysadmin') %]
 | <a href="[% base %]news/add">Add</a>
 [% END %]
-</p>
 <ul>
 [% WHILE (new = news.next) %]
 	<li>

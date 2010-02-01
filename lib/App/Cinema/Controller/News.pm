@@ -15,7 +15,7 @@ sub add : Local Form {
 		my $row = $c->model('MD::News')->create(
 			{
 				title        => $form->field('title'),
-				_desc        => $form->field('desc'),
+				content        => $form->field('desc'),
 				release_date => HTTP::Date::time2iso(time),
 			}
 		);

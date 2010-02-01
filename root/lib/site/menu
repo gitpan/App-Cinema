@@ -12,10 +12,10 @@
     <li><span id="search">
 		    <form action="[% Catalyst.uri_for('/menu/search') %]" method="POST">
 				<select id="sel" name="sel" class="options">
-					<option value="item">Item</option>
-					<option value="news">MyLog</option>
-					<option value="event">Event</option>					
-					<option value="user">User</option>
+					<option value="item">MOVIE</option>
+					<option value="news">MYLOG</option>
+					<option value="event">EVENT</option>					
+					<option value="user">USER</option>
 				</select>
 				<input type="text" name="txt">
 				<input type="submit" value="Search"/>

@@ -24,6 +24,6 @@ fields:
 		required: 1
 	role:
         label:   Role
-        options: 1=user, 2=admin
+        options: 1=user, 3=admin
 	    value: 1
 stylesheet: 1

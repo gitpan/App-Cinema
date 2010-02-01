@@ -1,14 +1,15 @@
 package App::Cinema::Controller::User;
 use Moose;
 use namespace::autoclean;
+use Captcha::reCAPTCHA;
+require App::Cinema::Event;
 
 BEGIN {
 	extends qw/Catalyst::Controller::FormBuilder/;
 	our $VERSION = $App::Cinema::VERSION;
 }
-use TryCatch;
-use Captcha::reCAPTCHA;
-require App::Cinema::Event;
+
+#use TryCatch;
 
 sub captcha : Local {
 	my ( $self, $c ) = @_;
@@ -69,7 +70,7 @@ sub login : Local Form {
 		if ($status) {
 
 			# If successful, then let them use the application
-			$c->flash->{message} = "Welcome back, " . $uid;
+			#$c->flash->{message} = "Welcome back, " . $uid;
 			$c->res->redirect( $c->uri_for('/menu/home') );
 			return;
 		}
@@ -99,7 +100,7 @@ sub history : Local {
 		return 0;
 	}
 	my $rs;
-	if ( $c->check_user_roles(qw/superadmin/) ) {
+	if ( $c->check_user_roles(qw/sysadmin/) ) {
 		$rs = $c->model('MD::Event')->search(
 			$c->session->{query},    #undef
 			{ rows => 10, order_by => { -desc => 'e_time' } }
@@ -200,9 +201,9 @@ sub view : Local {
 	if ( !$c->user_exists ) {
 		$c->stash->{error}    = $c->config->{need_login_errmsg};
 		$c->stash->{template} = 'result.tt2';
-		return 0;
+		return;
 	}
-	if ( $c->check_user_roles(qw/superadmin/) ) {
+	if ( $c->check_any_user_role(qw/sysadmin/) ) {
 		$c->stash->{users} =
 		  $c->model('MD::Users')->search( $c->session->{query} );
 	}
@@ -215,19 +216,23 @@ sub view : Local {
 
 sub delete_do : Local {
 	my ( $self, $c, $id ) = @_;
-	if ( $c->check_user_roles(qw/superadmin/) ) {
-		$c->model('MD::Users')->find($id)->delete();
 
-		my $e = App::Cinema::Event->new();
-		$e->desc(' deleted account : ');
-		$e->target($id);
-		$e->insert($c);
+	eval {
+		$c->assert_user_roles(qw/sysadmin/);    # only admins can delete
+	};
+	if ($@) {
+		$c->flash->{error} = $@; #$c->config->{need_auth_msg};
+		$c->res->redirect( $c->uri_for('/user/view') );
+		return;
+	}
+	$c->model('MD::Users')->find($id)->delete();
 
-		$c->flash->{message} = "User deleted";
-	}
-	else {
-		$c->flash->{error} = "You are not authorized to delete this.";
-	}
+	my $e = App::Cinema::Event->new();
+	$e->desc(' deleted account : ');
+	$e->target($id);
+	$e->insert($c);
+
+	$c->flash->{message} = "User deleted";
 	$c->res->redirect( $c->uri_for('/user/view') );
 }
 

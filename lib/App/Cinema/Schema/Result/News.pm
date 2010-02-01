@@ -24,7 +24,7 @@ __PACKAGE__->add_columns(
 		is_nullable   => 1,
 		size          => 30,
 	},
-	"_desc",
+	"content",
 	{
 		data_type     => "VARCHAR",
 		default_value => undef,

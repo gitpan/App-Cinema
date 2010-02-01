@@ -11,11 +11,11 @@ sub home : Local {
 	my ( $self, $c ) = @_;
 	my $result =
 	  $c->model('MD::Item')
-	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
+	  ->search( undef, { rows => 1, order_by => { -desc => 'release_date' } } );
 	$c->stash->{items} = $result;
 	my $news =
 	  $c->model('MD::News')
-	  ->search( undef, { rows => 3, order_by => { -desc => 'release_date' } } );
+	  ->search( undef, { rows => 1, order_by => { -desc => 'release_date' } } );
 	$c->stash->{news} = $news;
 }
 
@@ -35,11 +35,11 @@ sub search : Local {
 	}
 	elsif ( $genre eq 'news' ) {
 		$uri    = '/news/view';
-		@fields = qw/title _desc/;
+		@fields = qw/title content/;
 	}
 	elsif ( $genre eq 'event' ) {
 		$uri    = '/user/history';
-		@fields = qw/target _desc/;
+		@fields = qw/target content/;
 	}
 	elsif ( $genre eq 'user' ) {
 		$uri    = '/user/view';
@@ -64,6 +64,28 @@ sub cross {
 }
 
 sub about : Local {
+	my ( $self, $c ) = @_;
+	$c->stash->{error} = $c->config->{need_login_errmsg}
+	  unless $c->user_exists();
+}
+
+sub howto : Local {
+}
+
+sub dbschema : Local {
+	my ( $self, $c ) = @_;
+	eval {
+		$c->assert_any_user_role(qw/vipuser/);    # only admins can delete
+	};
+	if ($@) {
+		$c->flash->{error} = $c->config->{need_auth_msg};
+		$c->res->redirect( $c->uri_for('/menu/about') );
+		return;
+	}
+	$c->forward('howto');
+	$c->stash->{template} = 'menu/howto.tt2'; 
+	#$c->forward('static/db.txt');		
+	#die join "\n", @{ $c->error } if @{ $c->error };
 }
 
 1;

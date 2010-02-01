@@ -1,25 +1,32 @@
 [% META title = 'ABOUT' %]
 <div id="about" size = "50%">
-<!--
-<b>Reference</b>
-<p>
-</p>
--->
 <b>Comment</b>
 <p>
 [% IF !Catalyst.user_exists %]
-Please login in first before leaving your comment.</p>
-[% END %]
+<!--<p>Please <a href="[% Catalyst.uri_for('/user/captcha/') %]">login in</a> first</p>-->
+<ul>
+	<li>Add</li>
+	<li>View</li>
+</ul>
+[% ELSE %]
 <ul>
 	<li><a href="[% base %]comment/add">Add</a>
 	</li>
 	<li><a href="[% base %]comment/view">View</a>
 	</li>
-</ul> 
+</ul>
+[% END %] 
 </p>
 <b>My Profile</b>
-<!--<a href="http://search.cpan.org/~sman/">CPAN Project</a><br>-->
-<!--<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>-->
+[% IF !Catalyst.user_exists %]
+<!--<p>Please <a href="[% Catalyst.uri_for('/user/captcha/') %]">login in</a> first</p>-->
+<ul>
+	<li>Course Project</li>
+	<li>PerlMonk Q&A</li>
+	<li>Resume<br>
+	</li>
+</ul>
+[% ELSE %]
 <ul>
 	<li><a href="http://students.engr.scu.edu/~cmo/index.html">Course Project</a><br>
 	</li>
@@ -27,5 +34,23 @@ Please login in first before leaving your comment.</p>
 	</li>
 	<li><a href="[% base %]static/Resume_Jeff Mo.pdf">Resume</a><br>
 	</li>
+</ul>
+[% END %]
+<b>My Design</b>
+[% IF !Catalyst.user_exists %]
+<!--<p>Please <a href="[% Catalyst.uri_for('/user/captcha/') %]">login in</a> first</p>-->
+[% END %]
+<ul>
+	
+	<!--<a href="http://search.cpan.org/~sman/">CPAN Project</a><br>-->
+	<!--<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>-->
+	[% IF !Catalyst.check_any_user_role('vipuser') %]
+		<li>Source</li>
+		<li>Table Schema</li>
+	[% ELSE %]
+		<li><a href="http://search.cpan.org/~sman/">Source</a></li>
+		<li><a href="[% base %]static/db.txt">
+		Table Schema</a</li>
+	[% END %]	
 </ul>
 </div>
