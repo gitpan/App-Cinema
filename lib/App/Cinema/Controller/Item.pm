@@ -1,6 +1,8 @@
 package App::Cinema::Controller::Item;
 use Moose;
 use namespace::autoclean;
+use Mail::Mailer;
+use HTTP::Date qw/time2iso/;
 
 BEGIN {
 	extends qw/Catalyst::Controller::FormBuilder/;
@@ -56,9 +58,8 @@ sub view : Local {
 
 sub delete_do : Local {
 	my ( $self, $c, $id, $info ) = @_;
-	eval {
-		$c->assert_any_user_role(qw/sysadmin admin/);
-	};
+
+	eval { $c->assert_any_user_role(qw/admin sysadmin/); };
 	if ($@) {
 		$c->flash->{error} = $c->config->{need_auth_msg};
 		$c->res->redirect( $c->uri_for('/item/view') );
@@ -69,7 +70,7 @@ sub delete_do : Local {
 
 	my $e = App::Cinema::Event->new();
 	$e->desc(' deleted movie : ');
-	$e->target( $info );
+	$e->target($info);
 	$e->insert($c);
 
 	$c->flash->{message} = "Item deleted";
@@ -81,15 +82,42 @@ sub checkout_do : Local {
 	if ( !$c->user_exists ) {
 		$c->flash->{error} = $c->config->{need_auth_msg};
 		$c->res->redirect( $c->uri_for('/item/view') );
-		return 0;
+		return;
 	}
+	my $addr = $c->user->obj->email_address;
+	if ( !$addr ) {
+		$c->flash->{error} = $c->config->{email_null_errmsg};
+		$c->res->redirect( $c->uri_for('/item/view') );
+		return;
+	}
+	my $subject = "Checkout Confirmation:" . time2iso(time);
+	my $mailer  = Mail::Mailer->new("sendmail");
+	$mailer->open(
+		{
+			From    => $c->config->{SYSEMAIL},
+			To      => $addr,
+			Subject => $subject,
+		}
+	) or die "Can't open: $!\n";
+	my $fn = $c->user->obj->first_name;
+	print $mailer <<EO_SIG;
+Hi $fn,
+
+You just checked out a movie, $info.
+Please let us know if you have any problem.
+
+Thank,
+JandC
+EO_SIG
+	close($mailer);
 
 	my $e = App::Cinema::Event->new();
 	$e->desc(' watched movie : ');
 	$e->target($info);
 	$e->insert($c);
 
-	$c->flash->{message} = 'Your checkout "' . $info . '" is completed.';
+	$c->flash->{message} =
+'Your checkout is completed. <br>A confirmation email was sent to your emailbox.';
 	$c->res->redirect( $c->uri_for('/item/view') );
 }
 

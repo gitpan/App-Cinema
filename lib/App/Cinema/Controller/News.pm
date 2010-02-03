@@ -15,7 +15,7 @@ sub add : Local Form {
 		my $row = $c->model('MD::News')->create(
 			{
 				title        => $form->field('title'),
-				content        => $form->field('desc'),
+				content      => $form->field('desc'),
 				release_date => HTTP::Date::time2iso(time),
 			}
 		);
@@ -26,8 +26,13 @@ sub add : Local Form {
 
 sub view : Local {
 	my ( $self, $c ) = @_;
-	if ( !$c->user_exists ) {
+	unless ( $c->user_exists ) {
 		$c->stash->{error}    = $c->config->{need_login_errmsg};
+		$c->stash->{template} = 'result.tt2';
+		return;
+	}
+	unless ( $c->check_any_user_role(qw/vipuser sysadmin/) ) {
+		$c->stash->{error}    = $c->config->{need_auth_msg};
 		$c->stash->{template} = 'result.tt2';
 		return;
 	}

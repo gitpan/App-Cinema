@@ -22,14 +22,14 @@ __PACKAGE__->add_columns(
 		data_type     => "VARCHAR",
 		default_value => undef,
 		is_nullable   => 1,
-		size          => 30,
+		size          => 100,
 	},
 	"content",
 	{
 		data_type     => "VARCHAR",
 		default_value => undef,
 		is_nullable   => 1,
-		size          => 200,
+		size          => 500,
 	},
 	"release_date",
 	{

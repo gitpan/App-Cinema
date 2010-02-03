@@ -1,9 +1,11 @@
 package App::Cinema::Controller::Menu;
 use Moose;
 use namespace::autoclean;
+use Mail::Mailer;
+use HTTP::Date qw/time2iso/;
 
 BEGIN {
-	extends qw/Catalyst::Controller/;
+	extends qw/Catalyst::Controller::FormBuilder/;
 	our $VERSION = $App::Cinema::VERSION;
 }
 
@@ -22,16 +24,15 @@ sub home : Local {
 sub search : Local {
 	my ( $self, $c ) = @_;
 
-	my $genre  = $c->req->params->{sel};
-	my $string = $c->req->params->{txt};
-	my $str    = $c->req->params->{'txt'};
+	my $genre = $c->req->params->{sel};
+	my $str = $c->req->params->{txt};
 
-	my @fields;
 	my $uri = '';
+	my @fields = undef;	
 
-	if ( $genre eq 'item' ) {
-		@fields = qw/title plot year/;
+	if ( $genre eq 'item' ) {		
 		$uri    = '/item/view';
+		@fields = qw/title plot year/;
 	}
 	elsif ( $genre eq 'news' ) {
 		$uri    = '/news/view';
@@ -49,6 +50,8 @@ sub search : Local {
 	my @tokens = $str;
 	@fields = cross( \@fields, \@tokens );
 	$c->session->{query} = \@fields;
+	$c->session->{str} = $str;
+	$c->session->{genre} = $genre;
 	$c->res->redirect( $c->uri_for($uri) );
 }
 
@@ -72,20 +75,48 @@ sub about : Local {
 sub howto : Local {
 }
 
-sub dbschema : Local {
+sub email : Local Form {
 	my ( $self, $c ) = @_;
-	eval {
-		$c->assert_any_user_role(qw/vipuser/);    # only admins can delete
-	};
-	if ($@) {
-		$c->flash->{error} = $c->config->{need_auth_msg};
-		$c->res->redirect( $c->uri_for('/menu/about') );
+
+	if ( !$c->user_exists ) {
+		$c->flash->{error} = $c->config->{need_login_errmsg};
+		$c->res->redirect( $c->uri_for('/menu/howto') );
 		return;
 	}
-	$c->forward('howto');
-	$c->stash->{template} = 'menu/howto.tt2'; 
-	#$c->forward('static/db.txt');		
-	#die join "\n", @{ $c->error } if @{ $c->error };
+
+	my $form = $self->formbuilder;
+
+	if ( $form->submitted && $form->validate ) {
+		my $email = $c->user->obj->email_address;
+		if ( !$email ) {
+			$c->stash->{error} = $c->config->{email_null_errmsg};
+			return;
+		}
+		my $subject =
+		    "Upgrade to vipuser:"
+		  . $c->user->obj->username . ':'
+		  . time2iso(time);
+		my $mailer = Mail::Mailer->new("sendmail");
+		$mailer->open(
+			{
+				From    => $email,
+				To      => $c->config->{SYSEMAIL},
+				Subject => $subject,
+			}
+		) or die "Can't open: $!\n";
+		my $body = $form->field('reason');
+		print $mailer $body;
+		$mailer->close();
+
+		my $e = App::Cinema::Event->new();
+		$e->uid( $c->user->obj->username );
+		$e->desc(' sent email : ');
+		$e->target('vipuser');
+		$e->insert($c);
+
+		$c->flash->{message} = 'Your email was sent to sysadmin.';
+		$c->res->redirect( $c->uri_for('/menu/howto') );
+	}
 }
 
 1;

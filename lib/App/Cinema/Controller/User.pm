@@ -2,14 +2,14 @@ package App::Cinema::Controller::User;
 use Moose;
 use namespace::autoclean;
 use Captcha::reCAPTCHA;
+use Mail::Mailer;
 require App::Cinema::Event;
+use HTTP::Date qw/time2iso/;
 
 BEGIN {
 	extends qw/Catalyst::Controller::FormBuilder/;
 	our $VERSION = $App::Cinema::VERSION;
 }
-
-#use TryCatch;
 
 sub captcha : Local {
 	my ( $self, $c ) = @_;
@@ -22,11 +22,6 @@ sub captcha : Local {
 
 	# Check response
 	if ($challenge) {
-
-		#		my $result = $rc->check_answer(
-		#			'6Ld_2QoAAAAAAGFBZHFdBj9_rK4voLSEZK3oY9o8',
-		#			'75.127.98.108', $challenge, $response
-		#		);
 		my $result = $rc->check_answer(
 			$c->config->{PRI_KEY},
 			$c->config->{REMOTE_IP},
@@ -70,7 +65,7 @@ sub login : Local Form {
 		if ($status) {
 
 			# If successful, then let them use the application
-			#$c->flash->{message} = "Welcome back, " . $uid;
+			$c->flash->{message} = "Welcome back, " . $uid;
 			$c->res->redirect( $c->uri_for('/menu/home') );
 			return;
 		}
@@ -97,18 +92,12 @@ sub history : Local {
 	if ( !$c->user_exists ) {
 		$c->stash->{error}    = $c->config->{need_login_errmsg};
 		$c->stash->{template} = 'result.tt2';
-		return 0;
+		return;
 	}
-	my $rs;
-	if ( $c->check_user_roles(qw/sysadmin/) ) {
-		$rs = $c->model('MD::Event')->search(
-			$c->session->{query},    #undef
-			{ rows => 10, order_by => { -desc => 'e_time' } }
-		);
-	}
-	else {
-		$rs = $c->model('MD::Event')->search( $c->session->{query},
-			{ rows => 10, order_by => { -desc => 'e_time' } } );
+	my $rs = $c->model('MD::Event')->search( $c->session->{query},
+		{ rows => 10, order_by => { -desc => 'e_time' } } );
+	unless ( $c->check_user_roles(qw/sysadmin/) ) {
+		$rs = $rs->search( { uid => $c->user->obj->username } );
 	}
 
 	#page navigation
@@ -124,8 +113,6 @@ sub add : Local Form {
 	my $form = $self->formbuilder;
 	if ( $form->submitted && $form->validate ) {
 		eval {
-
-			#		try {                         #1/24
 			my $row = $c->model('MD::Users')->create(
 				{
 					first_name    => $form->field('fname'),
@@ -134,10 +121,9 @@ sub add : Local Form {
 					username      => $form->field('uid'),
 					password      => $form->field('pwd'),
 					active        => 1,
-					user_roles    => [ { role_id => $form->field('role') }, ],
+					user_roles    => [ { role_id => $form->field('role') } ]
 				}
 			);
-
 			my $e = App::Cinema::Event->new();
 			$e->uid( $row->username );
 			$e->desc(' created account : ');
@@ -150,23 +136,59 @@ sub add : Local Form {
 		if ($@) {
 			$c->stash->{error} = $@;
 		}
-
-		#		}
-		#		catch( DBIx::Class::Exception $e) {
-		#			$c->stash->{error} = $c->config->{err_duplicated_pk};
-		#		};
 	}
 }
 
-sub edit : Local Form {
+sub edit_sys : Local Form {
 	my ( $self, $c, $id ) = @_;
-	my $form = $self->formbuilder;
-	my $user = $c->model('MD::Users')->find( { username => $id } );
+	my $form  = $self->formbuilder;
+	my $user  = $c->model('MD::Users')->find( { username => $id } );
+	my $email = $user->email_address;
+
+	unless ($email) {
+		$c->flash->{error} = $c->config->{email_null_errmsg};
+		$c->res->redirect( $c->uri_for('view') );
+		return;
+	}
+
 	if ( $form->submitted && $form->validate ) {
-		$user->first_name( $form->field('fname') );
-		$user->last_name( $form->field('lname') );
-		$user->email_address( $form->field('email') );
-		$user->password( $form->field('pwd') );
+		$c->model('MD::UserRoles')->search( { user_id => $user->username } )
+		  ->delete();
+
+		foreach ( $form->field('role') ) {
+			$user->create_related( 'user_roles', { role_id => $_ } );
+		}
+		$user->update_or_insert();
+
+		my $subject = "Change Roles:" . time2iso(time);
+		my $mailer  = Mail::Mailer->new("sendmail");
+		$mailer->open(
+			{
+				From    => $c->config->{SYSEMAIL},
+				To      => $email,
+				Subject => $subject,
+			}
+		) or die "Can't open: $!\n";
+
+		my $str = "";
+		foreach ( $user->roles ) {
+			$str = $str . $_->role . ',';
+		}
+
+		my $fn = $user->first_name;
+		print $mailer <<EO_SIG;
+Hi $fn,
+
+Your account has been changed by sysadmin. Your new roles are:
+$str
+
+Please let us know if you have any question.
+
+Thank,
+JandC
+EO_SIG
+		close($mailer);
+
 		$user->update_or_insert();
 
 		my $e = App::Cinema::Event->new();
@@ -174,25 +196,143 @@ sub edit : Local Form {
 		$e->target($id);
 		$e->insert($c);
 
-		$c->stash->{message} = 'Edited ' . $user->first_name;
+		$c->flash->{message} = 'Edited ' . $user->first_name;
+		$c->res->redirect( $c->uri_for('/user/view') );
+		return;
 	}
-	else {
+
+	my @ids = ();
+	foreach ( $user->user_roles ) {
+		push @ids, $_->role_id;
+	}
+
+	$c->stash->{message} = $id;
+
+	$form->field(
+		name  => 'role',
+		type  => 'checkbox',
+		value => \@ids,
+	);
+	if ( $c->check_user_roles(qw/sysadmin/) ) {
 		$form->field(
-			name  => 'fname',
-			value => $user->first_name
+			name    => 'role',
+			options => [
+				[ 1 => 'user' ],
+				[ 2 => 'vipuser' ],
+				[ 3 => 'admin' ],
+				[ 4 => 'sysadmin' ],
+			]
 		);
+		return;
+	}
+	if ( $c->check_user_roles(qw/vipuser/) ) {
 		$form->field(
-			name  => 'lname',
-			value => $user->last_name
+			name => 'role',
+			options =>
+			  [ [ 1 => 'user' ], [ 2 => 'vipuser' ], [ 3 => 'admin' ], ]
 		);
+		return;
+	}
+	if ( $c->check_any_user_role(qw/user admin/) ) {
 		$form->field(
-			name  => 'email',
-			value => $user->email_address
+			name    => 'role',
+			options => [ [ 1 => 'user' ], [ 3 => 'admin' ], ]
 		);
+		return;
+	}
+}
+
+sub edit : Local Form {
+	my ( $self, $c, $id ) = @_;
+	my $form = $self->formbuilder;
+	my $user = $c->model('MD::Users')->find( { username => $id } );
+
+	if ( $user->username ne $c->user->obj->username() ) {
+		$c->res->redirect( $c->uri_for('edit_sys') . "/" . $id );
+		return;
+	}
+
+	if ( $form->submitted && $form->validate ) {
+		my %attrs = { user_id => $user->username };
+
+		#$c->model('MD::UserRoles')->search(\%attrs)->delete();
+		$c->model('MD::UserRoles')->search( { user_id => $user->username } )
+		  ->delete();
+
+		$user->first_name( $form->field('fname') );
+		$user->last_name( $form->field('lname') );
+		$user->email_address( $form->field('email') );
+		$user->password( $form->field('pwd') );
+
+		foreach ( $form->field('role') ) {
+			$user->create_related( 'user_roles', { role_id => $_ } );
+		}
+
+		$user->update_or_insert();
+
+		my $e = App::Cinema::Event->new();
+		$e->desc(' edited account : ');
+		$e->target($id);
+		$e->insert($c);
+
+		$c->flash->{message} = 'Edited ' . $user->first_name;
+		$c->res->redirect( $c->uri_for('/user/view') );
+		return;
+	}
+
+	$form->field(
+		name  => 'fname',
+		value => $user->first_name,
+	);
+	$form->field(
+		name  => 'lname',
+		value => $user->last_name,
+	);
+	$form->field(
+		name  => 'email',
+		value => $user->email_address,
+	);
+	$form->field(
+		name  => 'pwd',
+		value => $user->password,
+	);
+
+	my @ids = ();
+	foreach ( $user->user_roles ) {
+		push @ids, $_->role_id;
+	}
+
+	$form->field(
+		name  => 'role',
+		type  => 'checkbox',
+		value => \@ids,
+	);
+	if ( $c->check_user_roles(qw/sysadmin/) ) {
 		$form->field(
-			name  => 'pwd',
-			value => $user->password
+			name    => 'role',
+			options => [
+				[ 1 => 'user' ],
+				[ 2 => 'vipuser' ],
+				[ 3 => 'admin' ],
+				[ 4 => 'sysadmin' ],
+			]
 		);
+		return;
+	}
+	if ( $c->check_user_roles(qw/vipuser/) ) {
+		$form->field(
+			name => 'role',
+			options =>
+			  [ [ 1 => 'user' ], [ 2 => 'vipuser' ], [ 3 => 'admin' ], ]
+		);
+		return;
+	}
+	if ( $c->check_any_user_role(qw/user admin/) ) {
+		$form->field(
+			name    => 'role',
+			options => [ [ 1 => 'user' ], [ 3 => 'admin' ], ]
+		);
+		return;
 	}
 }
 
@@ -217,11 +357,9 @@ sub view : Local {
 sub delete_do : Local {
 	my ( $self, $c, $id ) = @_;
 
-	eval {
-		$c->assert_user_roles(qw/sysadmin/);    # only admins can delete
-	};
+	eval { $c->assert_user_roles(qw/sysadmin/); };
 	if ($@) {
-		$c->flash->{error} = $@; #$c->config->{need_auth_msg};
+		$c->flash->{error} = $c->config->{need_auth_msg};
 		$c->res->redirect( $c->uri_for('/user/view') );
 		return;
 	}
@@ -246,16 +384,19 @@ App::Cinema::Controller::User - A controller that handles a user's actions.
 
 You can call its actions in any template files either
 
-    <a HREF="[% Catalyst.uri_for('/user/add') %]">Admin</a>
-    
-or
+					  < a HREF =
+					  "[% Catalyst.uri_for('/user/add') %]" > Admin </a>
 
-    <a HREF="[% base %]user/add">Admin</a>
+					  or
 
-You can also use them in any other controller modules like this:
+					  <a HREF="[% base %]user/add"> Admin </a>
 
-    $c->res->redirect( $c->uri_for('/user/edit') );
-		
+					  You can also
+					  use them in any other controller modules like this
+					:
+
+					  $c->res->redirect( $c->uri_for('/user/edit') );
+
 =head1 DESCRIPTION
 
 This is a controller that will handle every action of a user.

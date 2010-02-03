@@ -19,7 +19,9 @@
 		<td>[% user.email_address%]</td>
 		<td>[% user.username%]</td>		
 		<td><a href="[% Catalyst.uri_for('/user/edit/') _ user.username %]">EDIT</a></td>
+		[% IF Catalyst.check_user_roles('sysadmin') %]
 		<td><a href="[% Catalyst.uri_for('delete_do/') _ user.username %]">DELETE</a></td>
+		[% END %]
 	</tr>
 	[% END %]
 </table>

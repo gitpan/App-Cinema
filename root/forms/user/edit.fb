@@ -1,4 +1,4 @@
-name: user_edit
+name: user_edit	
 method: POST
 fields:
 	fname:
@@ -7,22 +7,18 @@ fields:
 		validate: NAME
 	lname:
 		label: Last Name
-		size: 30
-		validate: NAME	
+		size: 30		
+		validate: NAME
 	email:
 		label: Email
-		validate: EMAIL
-		required: 1
 		size: 30
+		validate: EMAIL
 	pwd:
 		label: Password
+		size: 30
 		type: Password
 		required: 1
-		size: 30
+	role:
+        label:   Roles
 submit: Save
 stylesheet: 1
-jsfunc: <<EOJS,
-//alert('kk');
-//alert(this._submit.value);
-//if (this._submit.value == 'Cancel') return true;
-EOJS

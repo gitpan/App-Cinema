@@ -3,6 +3,7 @@ App-Cinema-1.11.tar.gz
 App-Cinema-1.12.tar.gz
 App-Cinema-1.14.tar.gz
 App-Cinema-1.15.tar.gz
+App-Cinema-1.17.tar.gz
 app_cinema.yml
 Changes
 deploy
@@ -64,9 +65,12 @@ root/favicon.ico
 root/forms/code/history.fb
 root/forms/comment/add.fb
 root/forms/item/add.fb
+root/forms/menu/email.fb
 root/forms/news/add.fb
+root/forms/test/form.fb
 root/forms/user/add.fb
 root/forms/user/edit.fb
+root/forms/user/edit_sys.fb
 root/forms/user/login.fb
 root/forms/user/test.fb
 root/lib/config/col
@@ -91,6 +95,7 @@ root/src/login.tt2
 root/src/menu.tt2
 root/src/menu/about.tt2
 root/src/menu/dbschema.tt2
+root/src/menu/email.tt2
 root/src/menu/home.tt2
 root/src/menu/howto.tt2
 root/src/message.tt2
@@ -98,11 +103,13 @@ root/src/news/add.tt2
 root/src/news/detail.tt2
 root/src/news/view.tt2
 root/src/result.tt2
+root/src/test/form.tt2
 root/src/test/index.tt2
 root/src/ttsite.css
 root/src/user/add.tt2
 root/src/user/captcha.tt2
 root/src/user/edit.tt2
+root/src/user/edit_sys.tt2
 root/src/user/history.tt2
 root/src/user/login.tt2
 root/src/user/test.tt2
@@ -111,6 +118,7 @@ root/src/welcome.tt2
 root/static/db.txt
 root/static/index.html
 'root/static/Resume_Jeff Mo.pdf'
+root/static/rt.txt
 run
 script/app_cinema_cgi.pl
 script/app_cinema_create.pl

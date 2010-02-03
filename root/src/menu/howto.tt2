@@ -11,31 +11,32 @@ After login, you can be one or more of the following roles
 <li>user:</li>
 <ul>
 <li>can be set in "REGISTER" section</li>
-<li>can search MYLOG by title, content</li>
 <li>can search EVENT by target, content</li>
 <li>can edit your own account, but can't delete it =&gt; add event</li>
 <li>can checkout MOVIE, but can't delete it =&gt; add event
-, <font color="blue">send email to user</font>
+, send email to user
 </li>
 <li>can add/view comment</li>
-<li><font color="blue">can upgrade to vip via submittig a request 
-=> send email to sysadmin</font></li>
+<li>can upgrade to <a href="[% Catalyst.uri_for('/menu/email') %]">vip</a>
+ => send email to sysadmin => add event</li>
 </ul>
 <li>vipuser: </li>
 <ul>
 <li>can be set only by sysadmin</li>
+<li>can view/search MYLOG by title, content</li>
 <li>can view source code</li>
 <li>can view Table Schema</li>
+<li>can view Runtime Info</li>
 </ul>
 <li>admin:</li>
 <ul>
 <li>can be set in "REGISTER" section</li>
-<li><font color="blue">can add/delete movie created by yourself</font></li>
+<li>can add/delete movie created by yourself</li>
 </ul>
 <li>sysadmin: </li>
 <ul>
-<li>can edit all users' account<font color="blue">
-(including roles)</font> =&gt; add event</li>
+<li>can upgrade account to vipuser but can't edit other info. 
+=&gt; add event =&gt; send email</li>
 <li>can search user by first_name last_name email_address username</li>
 <li>can delete user account&nbsp;&nbsp; &nbsp;=&gt; add event</li>
 <li>can delete item&nbsp; =&gt; add event</li>

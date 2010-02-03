@@ -34,10 +34,19 @@ This file documents the revision history for App::Cinema.
 1.15 01/29/2010
 		- add captcha
 		- switch db to mysql
-1.16 01/31/2010		
+1.16 01/31/2010
 		- add validate to name field
 		- modify Role based access control
 		- add description of Role based access control
 		  <http://jandc.co.cc/menu/howto>
-		
+1.17 02/02/2010
+		- send email to user when check out movie
+		- sysadmin can edit all users' roles 
+		- every account can edit its own roles
+		- user can send email to ask for upgrading to vip
+		- sysadmin can only upgrade account to vipuser but can't edit other info
+		- fixed bug: delete user also delete its 'has many' data
+		- admin can add and delete movie created by yourself
+		- everyone can only search his/her own event except sysadmin
+		- keep search conditions after the result displays
 		

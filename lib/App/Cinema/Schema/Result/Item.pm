@@ -22,7 +22,7 @@ __PACKAGE__->add_columns(
 		data_type     => "VARCHAR",
 		default_value => undef,
 		is_nullable   => 1,
-		size          => 20,
+		size          => 50,
 	},
 	"plot",
 	{

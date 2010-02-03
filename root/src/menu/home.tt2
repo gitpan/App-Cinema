@@ -7,7 +7,7 @@ Welcome to JandC.CO.CC. This website is designed to demo how to use
 <span style="font-weight: bold;">Catalyst</span> and <span style="font-weight: bold;">
 Moose</span> to build a 
 secured web application with less SQL, HTML, and JavaScript but more 
-flexibility and efficiency. <br>You can start from 
+flexibility and efficiency. <br><br>You can start from 
 <a href="[% Catalyst.uri_for('/menu/howto') %]">
 	How-to</a> 
 </p>

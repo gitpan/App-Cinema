@@ -1,0 +1,7 @@
+name: edit_sys	
+method: POST
+fields:
+	role:
+        label: Roles
+submit: Save
+stylesheet: 1

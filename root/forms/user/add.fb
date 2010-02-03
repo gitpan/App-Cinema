@@ -12,7 +12,6 @@ fields:
 		label: Email
 		size: 30
 		validate: EMAIL
-		required: 1
 	uid:
 		label: User Id
 		size: 30

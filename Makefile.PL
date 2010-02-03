@@ -28,7 +28,7 @@ requires 'YAML::XS';
 requires 'YAML';
 requires 'HTTP::Date';
 requires 'Captcha::reCAPTCHA';
-
+requires 'Mail::Mailer';
 catalyst;
 
 install_script glob('script/*.pl');

@@ -3,7 +3,6 @@
 <b>Comment</b>
 <p>
 [% IF !Catalyst.user_exists %]
-<!--<p>Please <a href="[% Catalyst.uri_for('/user/captcha/') %]">login in</a> first</p>-->
 <ul>
 	<li>Add</li>
 	<li>View</li>
@@ -37,20 +36,17 @@
 </ul>
 [% END %]
 <b>My Design</b>
-[% IF !Catalyst.user_exists %]
-<!--<p>Please <a href="[% Catalyst.uri_for('/user/captcha/') %]">login in</a> first</p>-->
-[% END %]
 <ul>
-	
-	<!--<a href="http://search.cpan.org/~sman/">CPAN Project</a><br>-->
-	<!--<a href="http://cpan.uwinnipeg.ca/~sman">CPAN mirror</a><br>-->
-	[% IF !Catalyst.check_any_user_role('vipuser') %]
+	[% IF Catalyst.check_any_user_role('vipuser') %]
+		<li><a href="http://search.cpan.org/~sman/">Source</a></li>
+		<li><a href="[% base %]static/rt.txt">
+		Runtime Info</a></li>
+		<li><a href="[% base %]static/db.txt">
+		Table Schema</a></li>
+	[% ELSE %]
 		<li>Source</li>
 		<li>Table Schema</li>
-	[% ELSE %]
-		<li><a href="http://search.cpan.org/~sman/">Source</a></li>
-		<li><a href="[% base %]static/db.txt">
-		Table Schema</a</li>
+		<li>Runtime Info</li>
 	[% END %]	
 </ul>
 </div>

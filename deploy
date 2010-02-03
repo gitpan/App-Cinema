@@ -1,3 +1,4 @@
+rm *.gz
 sudo perl Makefile.PL
 make manifest
 make dist
