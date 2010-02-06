@@ -26,11 +26,16 @@ sub add : Local Form {
 
 sub view : Local {
 	my ( $self, $c ) = @_;
+
 	unless ( $c->user_exists ) {
 		$c->stash->{error}    = $c->config->{need_login_errmsg};
 		$c->stash->{template} = 'result.tt2';
 		return;
 	}
+
+#	$c->detach("unauthorized")
+#	  unless $c->check_any_user_role(qw/vipuser sysadmin/);
+
 	unless ( $c->check_any_user_role(qw/vipuser sysadmin/) ) {
 		$c->stash->{error}    = $c->config->{need_auth_msg};
 		$c->stash->{template} = 'result.tt2';

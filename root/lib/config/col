@@ -24,6 +24,7 @@
    };
    
    site.font = {
-   	  family  = "DejaVu Serif" 
+   	  family  = "sans-serif,Arial"  
+   	  #family  = "Arial"
    }
 %]

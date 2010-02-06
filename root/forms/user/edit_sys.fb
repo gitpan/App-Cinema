@@ -3,5 +3,5 @@ method: POST
 fields:
 	role:
         label: Roles
-submit: Save
+submit: Save, Cancel
 stylesheet: 1

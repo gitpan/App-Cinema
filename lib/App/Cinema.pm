@@ -15,7 +15,7 @@ use Catalyst qw/
   /;
 
 BEGIN {
-	our $VERSION = '1.17';
+	our $VERSION = '1.171';
 }
 
 #after this line, the $VERSION of other classes are configured
@@ -25,8 +25,19 @@ __PACKAGE__->setup;
 
 =head1 NAME
 
-App::Cinema - a demo website for Catalyst framework 
+App::Cinema - a demo website for Catalyst framework
+
+=head1 DESCRIPTION
+
+
 
 =head1 AUTHOR
 
 Jeff Mo - <mo0118@gmail.com>
+
+=head1 COPYRIGHT
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

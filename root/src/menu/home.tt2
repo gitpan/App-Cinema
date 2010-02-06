@@ -9,20 +9,8 @@ Moose</span> to build a
 secured web application with less SQL, HTML, and JavaScript but more 
 flexibility and efficiency. <br><br>You can start from 
 <a href="[% Catalyst.uri_for('/menu/howto') %]">
-	How-to</a> 
+	How-To</a> 
 </p>
-<!--
-<p><b>You can</b></p>
-<p>
-<ul>
-	<li>check <a href="[% Catalyst.uri_for('/menu/howto') %]">
-	How-to</a> before moving on</li>
-	<li>help improve this website via leaving your  
-<a href="[% Catalyst.uri_for('/comment/add') %]">comment</a>
-	</li>	
-</ul>
--->
-</p> 
 <b>Features</b>
 <ul>
 <table>

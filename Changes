@@ -49,4 +49,8 @@ This file documents the revision history for App::Cinema.
 		- admin can add and delete movie created by yourself
 		- everyone can only search his/her own event except sysadmin
 		- keep search conditions after the result displays
+1.18
+		- sysadmin can activate/deactivate user account instead of deleting it
+		- change font-family to Sans
+		
 		

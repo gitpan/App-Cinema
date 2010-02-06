@@ -50,7 +50,7 @@ sub search : Local {
 	my @tokens = $str;
 	@fields = cross( \@fields, \@tokens );
 	$c->session->{query} = \@fields;
-	$c->session->{str} = $str;
+	#$c->session->{str} = $str;
 	$c->session->{genre} = $genre;
 	$c->res->redirect( $c->uri_for($uri) );
 }
@@ -78,8 +78,14 @@ sub howto : Local {
 sub email : Local Form {
 	my ( $self, $c ) = @_;
 
-	if ( !$c->user_exists ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{error} = $c->config->{need_login_errmsg};
+		$c->res->redirect( $c->uri_for('/menu/howto') );
+		return;
+	}
+	
+	if ( $c->check_user_roles(qw/vipuser/) ) {
+		$c->flash->{error} = "You're already a vipuser";
 		$c->res->redirect( $c->uri_for('/menu/howto') );
 		return;
 	}
@@ -110,8 +116,8 @@ sub email : Local Form {
 
 		my $e = App::Cinema::Event->new();
 		$e->uid( $c->user->obj->username );
-		$e->desc(' sent email : ');
-		$e->target('vipuser');
+		$e->desc(' request vipuser');
+		$e->target('');
 		$e->insert($c);
 
 		$c->flash->{message} = 'Your email was sent to sysadmin.';

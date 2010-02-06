@@ -59,12 +59,11 @@ sub login : Local Form {
 		my $status = $c->authenticate(
 			{
 				username => $uid,
-				password => $pwd
+				password => $pwd,
+				active   => 1
 			}
 		);
-		if ($status) {
-
-			# If successful, then let them use the application
+		if ($status) {    # If successful, then let them use the application
 			$c->flash->{message} = "Welcome back, " . $uid;
 			$c->res->redirect( $c->uri_for('/menu/home') );
 			return;
@@ -79,8 +78,7 @@ sub logout : Local {
 	my ( $self, $c ) = @_;
 
 	# Clear the user's state
-	$c->session->{human} = undef;
-	$c->logout;
+	$c->logout();
 	$c->flash->{message} = 'Log out successfully.';
 
 	# Send the user to the starting point
@@ -136,6 +134,7 @@ sub add : Local Form {
 		if ($@) {
 			$c->stash->{error} = $@;
 		}
+		return;
 	}
 }
 
@@ -152,6 +151,11 @@ sub edit_sys : Local Form {
 	}
 
 	if ( $form->submitted && $form->validate ) {
+		unless ( $form->submitted eq 'Save' ) {
+			$c->res->redirect( $c->uri_for('/user/view') );
+			return;
+		}
+
 		$c->model('MD::UserRoles')->search( { user_id => $user->username } )
 		  ->delete();
 
@@ -167,6 +171,7 @@ sub edit_sys : Local Form {
 				From    => $c->config->{SYSEMAIL},
 				To      => $email,
 				Subject => $subject,
+				CC      => $c->config->{SYSEMAIL},
 			}
 		) or die "Can't open: $!\n";
 
@@ -247,15 +252,18 @@ sub edit : Local Form {
 	my $form = $self->formbuilder;
 	my $user = $c->model('MD::Users')->find( { username => $id } );
 
-	if ( $user->username ne $c->user->obj->username() ) {
+	unless ( $user->username eq $c->user->obj->username() ) {
 		$c->res->redirect( $c->uri_for('edit_sys') . "/" . $id );
 		return;
 	}
 
 	if ( $form->submitted && $form->validate ) {
+		unless ( $form->submitted eq 'Save' ) {
+			$c->res->redirect( $c->uri_for('/user/view') );
+			return;
+		}
 		my %attrs = { user_id => $user->username };
 
-		#$c->model('MD::UserRoles')->search(\%attrs)->delete();
 		$c->model('MD::UserRoles')->search( { user_id => $user->username } )
 		  ->delete();
 
@@ -354,7 +362,7 @@ sub view : Local {
 	}
 }
 
-sub delete_do : Local {
+sub activate_do : Local {
 	my ( $self, $c, $id ) = @_;
 
 	eval { $c->assert_user_roles(qw/sysadmin/); };
@@ -363,14 +371,44 @@ sub delete_do : Local {
 		$c->res->redirect( $c->uri_for('/user/view') );
 		return;
 	}
-	$c->model('MD::Users')->find($id)->delete();
+	my $user = $c->model('MD::Users')->find($id);
+	$user->active(1);
+	$user->update_or_insert();
 
 	my $e = App::Cinema::Event->new();
-	$e->desc(' deleted account : ');
+	$e->desc(' activated account : ');
 	$e->target($id);
 	$e->insert($c);
 
-	$c->flash->{message} = "User deleted";
+	$c->flash->{message} = "User is activated";
+	$c->res->redirect( $c->uri_for('/user/view') );
+}
+
+sub deactivate_do : Local {
+	my ( $self, $c, $id ) = @_;
+
+#	eval { $c->assert_user_roles(qw/sysadmin/); };
+#	if ($@) {
+#		$c->flash->{error} = $c->config->{need_auth_msg};
+#		$c->res->redirect( $c->uri_for('/user/view') );
+#		return;
+#	}
+	my $user = $c->model('MD::Users')->find($id);
+	$user->active(0);
+	$user->update_or_insert();
+
+	my $e = App::Cinema::Event->new();
+	$e->desc(' deactivated account : ');
+	$e->target($id);
+	$e->insert($c);
+
+	$c->flash->{message} = "User \'$id\' is deactivated";
+
+	if ( $id eq $c->user->obj->username ) {
+		$c->res->redirect( $c->uri_for('/user/logout') );
+		return;
+	}
+
 	$c->res->redirect( $c->uri_for('/user/view') );
 }
 

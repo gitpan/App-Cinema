@@ -17,31 +17,11 @@
     	HREF="[% Catalyst.uri_for('/menu/about') %]">About</a></li>
     <li><span id="search">
 		    <form action="[% Catalyst.uri_for('/menu/search') %]" method="POST">
-				<select id="sel" name="sel" class="options">
-				[% IF Catalyst.session.genre == 'item' %]
-					<option value="item" selected=1>MOVIE</option>
-					<option value="news">MYLOG</option>
-					<option value="event">EVENT</option>					
-					<option value="user">USER</option>
-				[% END %]
-				[% IF Catalyst.session.genre == 'news' %]
-					<option value="item">MOVIE</option>
-					<option value="news" selected=1>MYLOG</option>
-					<option value="event">EVENT</option>					
-					<option value="user">USER</option>
-				[% END %]
-				[% IF Catalyst.session.genre == 'event' %]
+				<select id="sel" name="sel" class="options">				
 					<option value="item">MOVIE</option>
 					<option value="news">MYLOG</option>
-					<option value="event" selected=1>EVENT</option>					
-					<option value="user">USER</option>
-				[% END %]
-				[% IF Catalyst.session.genre == 'user' %]
-					<option value="item" selected=1>MOVIE</option>
-					<option value="news">MYLOG</option>
 					<option value="event">EVENT</option>					
-					<option value="user" selected=1>USER</option>
-				[% END %]
+					<option value="user">USER</option>
 				</select>
 				<input type="text" name="txt" value="[% Catalyst.session.str %]">
 				<input type="submit" value="Search"/>

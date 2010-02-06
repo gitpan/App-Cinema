@@ -1,6 +1,5 @@
-name: user_edit
+name: user_add
 method: POST
-title: Address
 fields:
 	fname:
 		label: First Name
@@ -12,6 +11,7 @@ fields:
 		label: Email
 		size: 30
 		validate: EMAIL
+		required: 1
 	uid:
 		label: User Id
 		size: 30
@@ -20,7 +20,7 @@ fields:
 		label: Password
 		size: 30
 		type: Password
-		required: 1
+		required: 1  
 	role:
         label:   Role
         options: 1=user, 3=admin
